@@ -1,4 +1,4 @@
-package cs175homeworks.musicfo;
+package musicfo;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

@@ -1,4 +1,4 @@
-package cs175homeworks.musicfo;
+package musicfo;
 
 import org.junit.Test;
 
