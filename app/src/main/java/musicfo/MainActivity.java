@@ -83,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
             JSONObject json = new JSONObject(result);
 
             //prevents duplicate artists with a set
-            HashSet<String> artists = new HashSet<>();
             if (json.has("resultsPage")) {
 
                 JSONObject resultsPage = json.getJSONObject("resultsPage");
@@ -95,9 +94,13 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject event = events.getJSONObject(i);
                     JSONArray performers = event.getJSONArray("performance");
                     String eventName = event.getString("displayName");
+
+                    HashSet<String> artists = new HashSet<>();
                     for (int j = 0; j < performers.length(); j++) {
 
                         JSONObject anArtist = performers.getJSONObject(j);
+                        Log.v("artist",anArtist.getString("displayName"));
+
                         artists.add(anArtist.getString("displayName"));
                     }
 
@@ -105,13 +108,16 @@ public class MainActivity extends AppCompatActivity {
                     allEvents.put(eventName, artists);
 
                     //clear artists for next event
-                    artists.clear();
                 }
             } else {
                 Toast.makeText(this, "Can't access songkick", Toast.LENGTH_LONG);
             }
 
-            Log.v("arti", allEvents.toString());
+            // Print events to insure they are being stored correctly
+//            int i = 0;
+//            for(Object key : allEvents.keySet().toArray()){
+//                Log.v("arti"+(i++), (String) key +": "+java.util.Arrays.toString(allEvents.get(key).toArray()));
+//            }
 
         } catch (JSONException e) {
             e.printStackTrace();
