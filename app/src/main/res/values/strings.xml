@@ -1,5 +1,14 @@
 <resources>
-    <string name="app_name">Musicfo</string>
+    <string name="app_name"></string>
     <string name="settings">Settings</string>
     <string name="saved_events">Saved Events</string>
+    <string name="search">Search for an Artist</string>
+    <string name="M">Co</string>
+    <string name="u">nc</string>
+    <string name="s">er</string>
+    <string name="i">ti</string>
+    <string name="c">fy</string>
+    <string name="f"></string>
+    <string name="o"></string>
+    <string name="slogan">Concerts on the go</string>
 </resources>
