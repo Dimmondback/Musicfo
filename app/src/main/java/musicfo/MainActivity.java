@@ -60,15 +60,27 @@ public class MainActivity extends AppCompatActivity {
                         processSearchData(result);
                     }
                 });
+
+        //
+        //
+        //TODO: either change the app dynamically
+        // and display search results or start a
+        // new intent with the results
+        //
+        // allEvents contains the data!
+        //
+
+
     }
+
+    //Concert first parameter, followed by all artists
+    HashMap<String, HashSet<String>> allEvents = new HashMap<>();
+
 
     private void processSearchData(String result) {
 
         try {
             JSONObject json = new JSONObject(result);
-
-            //Concert first parameter, followed by all artists
-            HashMap<String, HashSet<String>> allEvents = new HashMap<>();
 
             //prevents duplicate artists with a set
             HashSet<String> artists = new HashSet<>();
