@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/side_padding"
+    android:paddingTop="@dimen/top_margin"
+    android:paddingRight="@dimen/side_padding"
+    android:paddingBottom="@dimen/bottom_margin"
     tools:context="musicfo.MainActivity">
-
-
     <LinearLayout
         android:id="@+id/title"
         android:layout_width="wrap_content"
@@ -80,11 +79,7 @@
             android:textColor="@color/purple"
             android:textSize="56sp"
             android:textStyle="normal|bold" />
-
-
     </LinearLayout>
-
-
     <TextView
         android:id="@+id/slogan"
         android:layout_width="wrap_content"
@@ -105,6 +100,4 @@
         android:iconifiedByDefault="false"
         android:queryHint="@string/search"
         android:background="@color/white"/>
-
-
 </RelativeLayout>

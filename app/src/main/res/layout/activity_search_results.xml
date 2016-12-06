@@ -1,18 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/top_margin"
     android:paddingLeft="@dimen/bottom_margin"
     android:paddingRight="@dimen/bottom_margin"
     android:paddingTop="@dimen/top_margin"
-    tools:context="musicfo.SettingsActivity">
+    tools:context="musicfo.SearchResultsActivity">
 
-    <TextView
+    <SearchView
+        android:id="@+id/search_bar_top"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Settings Activity!"/>
-</RelativeLayout>
+        android:iconifiedByDefault="false"
+        android:queryHint="@string/search"
+        android:background="@color/white"/>
+
+    <ScrollView
+        android:id="@+id/search_results"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </ScrollView>
+</LinearLayout>

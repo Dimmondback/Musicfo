@@ -23,6 +23,9 @@ import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Concert first parameter, followed by all artists.
+    HashMap<String, HashSet<String>> allEvents = new HashMap<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,84 +42,67 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void search(View v) {
+
+        // TODO(nsaric): What is this toast here?
         Toast.makeText(this, "Can't access songkick", Toast.LENGTH_LONG);
 
         SearchView s = (SearchView) v;
         String searchValue = s.getQuery().toString();
 
-
-        //parse artist name into correct format
+        // parse artist name into correct format
         String artist = searchValue.replaceAll(" ", "+");
 
-
-        //make api query
+        // make api query
         Ion.with(this)
                 .load("http://api.songkick.com/api/3.0/events.json?apikey=kWvqvn4PIBVxIuqH&artist_name=" + artist)
                 .asString()
                 .setCallback(new FutureCallback<String>() {
                     @Override
                     public void onCompleted(Exception e, String result) {
-
                         processSearchData(result);
                     }
                 });
 
-        //
-        //
-        //TODO: either change the app dynamically
-        // and display search results or start a
-        // new intent with the results
-        //
-        // allEvents contains the data!
-        //
-
-
+        // Start the search results activity.
+        Intent searchResults = new Intent(getApplicationContext(), SearchResultsActivity.class);
+        searchResults.putExtra("search_results", allEvents);
+        startActivity(searchResults);
     }
 
-    //Concert first parameter, followed by all artists
-    HashMap<String, HashSet<String>> allEvents = new HashMap<>();
-
-
     private void processSearchData(String result) {
-
         try {
             JSONObject json = new JSONObject(result);
 
-            //prevents duplicate artists with a set
+            // Prevents duplicate artists with a set.
             HashSet<String> artists = new HashSet<>();
-            if (json.has("resultsPage")) {
 
+            if (json.has("resultsPage")) {
                 JSONObject resultsPage = json.getJSONObject("resultsPage");
                 JSONObject results = resultsPage.getJSONObject("results");
                 JSONArray events = results.getJSONArray("event");
 
                 for (int i = 0; i < events.length(); i++) {
-
                     JSONObject event = events.getJSONObject(i);
                     JSONArray performers = event.getJSONArray("performance");
                     String eventName = event.getString("displayName");
                     for (int j = 0; j < performers.length(); j++) {
-
                         JSONObject anArtist = performers.getJSONObject(j);
                         artists.add(anArtist.getString("displayName"));
                     }
 
-                    //add event to hashmap with artists
+                    // Add event to hashmap with artists.
                     allEvents.put(eventName, artists);
 
-                    //clear artists for next event
+                    // Clear artists for next event.
                     artists.clear();
                 }
             } else {
-                Toast.makeText(this, "Can't access songkick", Toast.LENGTH_LONG);
+                Toast.makeText(this, "Can't access songkick", Toast.LENGTH_LONG).show();
             }
-
             Log.v("arti", allEvents.toString());
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
@@ -141,6 +127,4 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
 }
