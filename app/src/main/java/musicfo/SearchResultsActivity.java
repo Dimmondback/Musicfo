@@ -3,6 +3,7 @@ package musicfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -14,21 +15,19 @@ import java.util.Map;
 
 public class SearchResultsActivity extends AppCompatActivity {
 
-  ScrollView searchResultsView;
+  LinearLayout searchResultsView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_search_results);
 
-    searchResultsView = (ScrollView) findViewById(R.id.search_results);
+    searchResultsView = (LinearLayout) findViewById(R.id.search_results);
 
-    if (savedInstanceState != null) {
-      System.out.println("savedInstanceState is not null.");
-      if (savedInstanceState.get("search_results") != null) {
-        System.out.println("get search_results is not null.");
+    if (this.getIntent().getExtras() != null) {
+      if (this.getIntent().getExtras().get("search_results") != null) {
         HashMap<String, HashSet<String>> results =
-            (HashMap<String, HashSet<String>>) savedInstanceState.get("search_results");
+            (HashMap<String, HashSet<String>>) this.getIntent().getExtras().get("search_results");
         addResultsToScreen(results);
       }
     }
@@ -39,24 +38,11 @@ public class SearchResultsActivity extends AppCompatActivity {
       String artist = entry.getKey();
       HashSet<String> event = entry.getValue();
 
-////////////////////////////
-      System.out.println("artist: " + artist);
-      for(String anEvent : event) {
-        System.out.println("anEvent: " + anEvent);
-      }
-///////////////////////////
-
       searchResultsView.addView(addEventView(artist, event));
     }
   }
 
   private View addEventView(String artist, HashSet<String> event) {
-    LinearLayout layout = new LinearLayout(getBaseContext());
-    layout.setLayoutParams(new LinearLayout.LayoutParams(
-        LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-    layout.setPadding((int) getResources().getDimension(R.dimen.side_padding), 0,
-        (int) getResources().getDimension(R.dimen.side_padding), 0);
-
     TextView textView = new TextView(getBaseContext());
     String eventText = artist + ":\n";
 
@@ -65,7 +51,9 @@ public class SearchResultsActivity extends AppCompatActivity {
     }
 
     textView.setText(eventText);
-    layout.addView(textView);
-    return layout;
+    textView.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+    textView.setLayoutParams(new ViewGroup.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+    return textView;
   }
 }
