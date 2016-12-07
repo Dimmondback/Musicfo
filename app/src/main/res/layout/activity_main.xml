@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
-    android:paddingLeft="@dimen/side_padding"
-    android:paddingTop="@dimen/top_margin"
-    android:paddingRight="@dimen/side_padding"
     android:paddingBottom="@dimen/bottom_margin"
+    android:paddingLeft="@dimen/side_padding"
+    android:paddingRight="@dimen/side_padding"
+    android:paddingTop="@dimen/top_margin"
     tools:context="musicfo.MainActivity">
+
+
     <LinearLayout
         android:id="@+id/title"
         android:layout_width="wrap_content"
@@ -81,6 +82,7 @@
             android:textSize="56sp"
             android:textStyle="normal|bold" />
     </LinearLayout>
+
     <TextView
         android:id="@+id/slogan"
         android:layout_width="wrap_content"
@@ -98,7 +100,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:background="@color/white"
         android:iconifiedByDefault="false"
-        android:queryHint="@string/search"
-        android:background="@color/white"/>
+        android:imeOptions="normal"
+        android:inputType="text"
+        android:onClick="search"
+        android:queryHint="@string/search" />
+
 </RelativeLayout>

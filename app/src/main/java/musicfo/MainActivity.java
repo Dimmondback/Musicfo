@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -30,13 +31,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        SearchView sv = (SearchView) findViewById(R.id.search_bar);
+        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
 
-        SearchView searchbar = (SearchView) findViewById(R.id.search_bar);
-        searchbar.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                search(v);
+            public boolean onQueryTextChange(String newText) {
+                //Log.e("onQueryTextChange", "called");
+                return false;
             }
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                search(findViewById(R.id.search_bar));
+
+                return true;
+            }
+
         });
     }
 
@@ -69,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void processSearchData(String result) {
         try {
+
             JSONObject json = new JSONObject(result);
 
             // Prevents duplicate artists with a set.

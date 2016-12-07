@@ -11,6 +11,11 @@
     android:paddingRight="@dimen/bottom_margin"
     android:paddingTop="@dimen/top_margin"
     tools:context="musicfo.SearchResultsActivity">
+    <LinearLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_width="0px"
+        android:layout_height="0px"/>
 
     <SearchView
         android:id="@+id/search_bar_top"
@@ -18,6 +23,7 @@
         android:layout_height="wrap_content"
         android:iconifiedByDefault="false"
         android:queryHint="@string/search"
+        android:windowSoftInputMode="stateHidden"
         android:background="@color/white"/>
 
     <ScrollView
@@ -30,5 +36,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
         </LinearLayout>
+
     </ScrollView>
+
 </LinearLayout>
