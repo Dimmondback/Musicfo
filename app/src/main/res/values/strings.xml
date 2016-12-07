@@ -3,12 +3,14 @@
     <string name="settings">Settings</string>
     <string name="saved_events">Saved Events</string>
     <string name="search">Search for an Artist</string>
-    <string name="M">Co</string>
-    <string name="u">nc</string>
-    <string name="s">er</string>
-    <string name="i">ti</string>
-    <string name="c">fy</string>
-    <string name="f"></string>
-    <string name="o"></string>
+    <string name="Co">Co</string>
+    <string name="nc">nc</string>
+    <string name="er">er</string>
+    <string name="ti">ti</string>
+    <string name="fy">fy</string>
+    <string name="f" />
+    <string name="o" />
     <string name="slogan">Concerts on the go</string>
+    <string name="toggleable">This button toggles the expandable layout.</string>
+    <string name="save_button">This button saves an event to a local database.</string>
 </resources>

@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="cursive"
-            android:text="@string/M"
+            android:text="@string/Co"
             android:textColor="@color/red"
             android:textSize="56sp"
             android:textStyle="normal|bold" />
@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="cursive"
-            android:text="@string/u"
+            android:text="@string/nc"
             android:textColor="@color/orange"
             android:textSize="56sp"
             android:textStyle="normal|bold" />
@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="cursive"
-            android:text="@string/s"
+            android:text="@string/er"
             android:textColor="@color/yellow"
             android:textSize="56sp"
             android:textStyle="normal|bold" />
@@ -50,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="cursive"
-            android:text="@string/i"
+            android:text="@string/ti"
             android:textColor="@color/green"
             android:textSize="56sp"
             android:textStyle="normal|bold" />
@@ -59,7 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="cursive"
-            android:text="@string/c"
+            android:text="@string/fy"
             android:textColor="@color/blue"
             android:textSize="56sp"
             android:textStyle="normal|bold" />
