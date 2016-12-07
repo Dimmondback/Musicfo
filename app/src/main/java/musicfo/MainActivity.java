@@ -23,6 +23,7 @@ import java.util.HashSet;
 public class MainActivity extends AppCompatActivity {
 
     //Concert first parameter, followed by all artists
+
     HashMap<String, HashSet<String>> allEvents = new HashMap<>();
 
     @Override
@@ -41,53 +42,47 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void search(View v) {
+
+        // TODO(nsaric): What is this toast here?
         Toast.makeText(this, "Can't access songkick", Toast.LENGTH_LONG);
 
         SearchView s = (SearchView) v;
         String searchValue = s.getQuery().toString();
 
-
-        //parse artist name into correct format
+        // parse artist name into correct format
         String artist = searchValue.replaceAll(" ", "+");
 
-
-        //make api query
+        // make api query
         Ion.with(this)
                 .load("http://api.songkick.com/api/3.0/events.json?apikey=kWvqvn4PIBVxIuqH&artist_name=" + artist)
                 .asString()
                 .setCallback(new FutureCallback<String>() {
                     @Override
                     public void onCompleted(Exception e, String result) {
+                        if (result != null) {
+                            processSearchData(result);
 
-                        processSearchData(result);
+                            // Start the search results activity.
+                            Intent searchResults = new Intent(getApplicationContext(), SearchResultsActivity.class);
+                            searchResults.putExtra("search_results", allEvents);
+                            startActivity(searchResults);
+                        }
                     }
                 });
-
-        //
-        //TODO: either change the app dynamically
-        // and display search results or start a
-        // new intent with the results
-        //
-        // allEvents contains the data!
-        //
-
 
     }
 
     private void processSearchData(String result) {
-
         try {
             JSONObject json = new JSONObject(result);
 
             //prevents duplicate artists with a set
             if (json.has("resultsPage")) {
-
                 JSONObject resultsPage = json.getJSONObject("resultsPage");
                 JSONObject results = resultsPage.getJSONObject("results");
                 JSONArray events = results.getJSONArray("event");
 
                 for (int i = 0; i < events.length(); i++) {
-
                     JSONObject event = events.getJSONObject(i);
                     JSONArray performers = event.getJSONArray("performance");
                     String eventName = event.getString("displayName");
@@ -95,31 +90,23 @@ public class MainActivity extends AppCompatActivity {
                     HashSet<String> artists = new HashSet<>();
 
                     for (int j = 0; j < performers.length(); j++) {
-
                         JSONObject anArtist = performers.getJSONObject(j);
                         Log.v("artist", anArtist.getString("displayName"));
 
                         artists.add(anArtist.getString("displayName"));
                     }
 
-                    //add event to hashmap with artists
+                    // Add event to hashmap with artists.
                     allEvents.put(eventName, artists);
-
                 }
             } else {
-                Toast.makeText(this, "Can't access songkick", Toast.LENGTH_LONG);
+                Toast.makeText(this, "Can't access songkick", Toast.LENGTH_LONG).show();
             }
-
-            // Print events to insure they are being stored correctly
-            int i = 0;
-            for(Object key : allEvents.keySet().toArray()){
-                Log.v("artists"+(i++), key +": "+java.util.Arrays.toString(allEvents.get(key).toArray()));
-            }
+            Log.v("arti", allEvents.toString());
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
@@ -144,6 +131,4 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
 }
