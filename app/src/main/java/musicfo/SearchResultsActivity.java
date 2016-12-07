@@ -3,10 +3,12 @@ package musicfo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -53,20 +55,46 @@ public class SearchResultsActivity extends AppCompatActivity {
     }
   }
 
+  private View addEventView(String event, HashSet<String> artistList) {
+    // Create the view from the xml file.
+    LayoutInflater inflater = LayoutInflater.from(getBaseContext());
+    LinearLayout eventView =
+        (LinearLayout) inflater.inflate(R.layout.expandable_layout, searchResultsView, false);
 
-  private View addEventView(String event, HashSet<String> artist) {
-    TextView textView = new TextView(getBaseContext());
+    // Set up the various parts of the expandable view for use.
+    TextView eventTitle = (TextView) eventView.findViewById(R.id.event_title);
+    final LinearLayout expandableArtistList =
+        (LinearLayout) eventView.findViewById(R.id.expandable_artist_list);
+    final ImageButton toggleable = (ImageButton) eventView.findViewById(R.id.toggleable);
 
-    String eventText = event + ":";
-    for (String anArtist : artist) {
-      eventText += "\n" + anArtist;
+    // Set the title's text
+    eventTitle.setText(event);
+    eventTitle.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+
+    // Add a listener for the toggle
+    toggleable.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        if (expandableArtistList.getVisibility() == View.VISIBLE) {
+          toggleable.setBackgroundResource(R.drawable.downarrow);
+          expandableArtistList.setVisibility(View.GONE);
+          ((View) v.getParent()).invalidate();
+        } else {
+          toggleable.setBackgroundResource(R.drawable.uparrow);
+          expandableArtistList.setVisibility(View.VISIBLE);
+          ((View) v.getParent()).invalidate();
+        }
+      }
+    });
+
+    // Add artist names to the expandable section.
+    for (String artist : artistList) {
+      TextView artistTextView = new TextView(eventView.getContext());
+      artistTextView.setText(artist);
+      expandableArtistList.addView(artistTextView);
     }
 
-    textView.setText(eventText);
-    textView.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-    textView.setLayoutParams(new ViewGroup.LayoutParams(
-        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-    return textView;
+    return eventView;
   }
 
   @Override
@@ -90,5 +118,10 @@ public class SearchResultsActivity extends AppCompatActivity {
       default:
         return super.onOptionsItemSelected(item);
     }
+  }
+
+  public void toggleViewExpansion(final View view) {
+    LinearLayout layout = (LinearLayout) view.getParent();
+
   }
 }

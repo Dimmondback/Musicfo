@@ -1,20 +1,17 @@
 Multiple Activities:
-	(Main/Search) 'Enter' performs search.
 	(Main/Search) Switch magnifying-glass to right side.
-	(Menu) Add an option to go to saved results.
 
 
 
 MainActivity:
 	Add Description.
-	Add Songkick and Sonfigy logos.	
-	(Later on) Facebook integration.
+	Add Songkick and Spotify logos.
 
 
 
 SearchResultsActivity:
-	Change TextView to ExpandableViewLayout
-	Enable Spotify integration for 30sec playback.
+	Improve upon UI/UX of ExpandableLayout.
+	Enable Spotify integration for 30sec playback and button.
 	Add functionality for saving events.
 
 
