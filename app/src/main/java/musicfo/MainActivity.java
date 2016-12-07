@@ -96,20 +96,11 @@ public class MainActivity extends AppCompatActivity {
 
                     // Add event to hashmap with artists.
                     allEvents.put(eventName, artists);
-
-                    // Clear artists for next event.
-                    artists.clear();
                 }
             } else {
                 Toast.makeText(this, "Can't access songkick", Toast.LENGTH_LONG).show();
             }
             Log.v("arti", allEvents.toString());
-
-            // Print events to insure they are being stored correctly
-//            int i = 0;
-//            for(Object key : allEvents.keySet().toArray()){
-//                Log.v("arti"+(i++), (String) key +": "+java.util.Arrays.toString(allEvents.get(key).toArray()));
-//            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

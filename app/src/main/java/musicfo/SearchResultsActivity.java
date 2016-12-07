@@ -5,12 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 
 public class SearchResultsActivity extends AppCompatActivity {
@@ -42,12 +40,13 @@ public class SearchResultsActivity extends AppCompatActivity {
     }
   }
 
-  private View addEventView(String artist, HashSet<String> event) {
+  private View addEventView(String event, HashSet<String> artist) {
     TextView textView = new TextView(getBaseContext());
-    String eventText = artist + ":\n";
+    String eventText = event + ":\n";
+    System.out.println();
 
-    for (String anEvent : event) {
-      eventText += anEvent + "\n";
+    for (String anArtist : artist) {
+      eventText += anArtist + "\n";
     }
 
     textView.setText(eventText);
