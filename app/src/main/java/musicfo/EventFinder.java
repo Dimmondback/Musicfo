@@ -44,6 +44,7 @@ class EventFinder {
           }
         });
   }
+
   private void processSearchData(String result) {
     try {
       JSONObject json = new JSONObject(result);
@@ -68,7 +69,7 @@ class EventFinder {
             artists.add(anArtist.getString("displayName"));
           }
 
-          // Add event to hashmap with artists.
+          // Add event to hashmap with artists
           allEvents.put(eventName, artists);
         }
       } else {
