@@ -17,13 +17,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Concert first parameter, followed by all artists.
+    // Concert first parameter, followed by all artists
     HashMap<String, HashSet<String>> allEvents = new HashMap<>();
 
     @Override
@@ -42,17 +41,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void search(View v) {
-
-        // TODO(nsaric): What is this toast here?
-        Toast.makeText(this, "Can't access songkick", Toast.LENGTH_LONG);
-
         SearchView s = (SearchView) v;
         String searchValue = s.getQuery().toString();
 
-        // parse artist name into correct format
+        // Parse artist name into correct format.
         String artist = searchValue.replaceAll(" ", "+");
 
-        // make api query
+        // Make api query.
         Ion.with(this)
                 .load("http://api.songkick.com/api/3.0/events.json?apikey=kWvqvn4PIBVxIuqH&artist_name=" + artist)
                 .asString()
@@ -69,13 +64,14 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
+
     }
 
     private void processSearchData(String result) {
         try {
             JSONObject json = new JSONObject(result);
 
-            //prevents duplicate artists with a set
+            // Prevents duplicate artists with a set.
             if (json.has("resultsPage")) {
                 JSONObject resultsPage = json.getJSONObject("resultsPage");
                 JSONObject results = resultsPage.getJSONObject("results");
@@ -87,9 +83,10 @@ public class MainActivity extends AppCompatActivity {
                     String eventName = event.getString("displayName");
 
                     HashSet<String> artists = new HashSet<>();
+
                     for (int j = 0; j < performers.length(); j++) {
                         JSONObject anArtist = performers.getJSONObject(j);
-                        Log.v("artist",anArtist.getString("displayName"));
+                        Log.v("artist", anArtist.getString("displayName"));
 
                         artists.add(anArtist.getString("displayName"));
                     }
