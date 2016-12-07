@@ -22,22 +22,38 @@ import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Concert first parameter, followed by all artists
-    HashMap<String, HashSet<String>> allEvents = new HashMap<>();
+    // Create an EventFinder to perform the searching and parsing.
+    EventFinder eventFinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Create EventFinder from previous material if it exists.
+        if (savedInstanceState != null || this.getIntent().getExtras() != null) {
+            if (savedInstanceState != null && savedInstanceState.get("search_results") != null) {
+                eventFinder = new EventFinder(this,
+                    (HashMap<String, HashSet<String>>) savedInstanceState.get("search_results"));
+            } else if (getIntent().getExtras().get("search_results") != null) {
+                eventFinder = new EventFinder(this, (HashMap<String, HashSet<String>>) getIntent()
+                    .getExtras().get("search_results"));
+            } else {
+                eventFinder = new EventFinder(this, new HashMap<String, HashSet<String>>());
+            }
+        } else {
+            eventFinder = new EventFinder(this, new HashMap<String, HashSet<String>>());
+        }
 
         SearchView searchbar = (SearchView) findViewById(R.id.search_bar);
-        searchbar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                search(v);
-            }
-        });
+        if (searchbar != null) {
+            searchbar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    search(v);
+                }
+            });
+        }
     }
 
     public void search(View v) {
@@ -47,60 +63,8 @@ public class MainActivity extends AppCompatActivity {
         // Parse artist name into correct format.
         String artist = searchValue.replaceAll(" ", "+");
 
-        // Make api query.
-        Ion.with(this)
-                .load("http://api.songkick.com/api/3.0/events.json?apikey=kWvqvn4PIBVxIuqH&artist_name=" + artist)
-                .asString()
-                .setCallback(new FutureCallback<String>() {
-                    @Override
-                    public void onCompleted(Exception e, String result) {
-                        if (result != null) {
-                            processSearchData(result);
-
-                            // Start the search results activity.
-                            Intent searchResults = new Intent(getApplicationContext(), SearchResultsActivity.class);
-                            searchResults.putExtra("search_results", allEvents);
-                            startActivity(searchResults);
-                        }
-                    }
-                });
-
-    }
-
-    private void processSearchData(String result) {
-        try {
-            JSONObject json = new JSONObject(result);
-
-            // Prevents duplicate artists with a set.
-            if (json.has("resultsPage")) {
-                JSONObject resultsPage = json.getJSONObject("resultsPage");
-                JSONObject results = resultsPage.getJSONObject("results");
-                JSONArray events = results.getJSONArray("event");
-
-                for (int i = 0; i < events.length(); i++) {
-                    JSONObject event = events.getJSONObject(i);
-                    JSONArray performers = event.getJSONArray("performance");
-                    String eventName = event.getString("displayName");
-
-                    HashSet<String> artists = new HashSet<>();
-
-                    for (int j = 0; j < performers.length(); j++) {
-                        JSONObject anArtist = performers.getJSONObject(j);
-                        Log.v("artist", anArtist.getString("displayName"));
-
-                        artists.add(anArtist.getString("displayName"));
-                    }
-
-                    // Add event to hashmap with artists.
-                    allEvents.put(eventName, artists);
-                }
-            } else {
-                Toast.makeText(this, "Can't access songkick", Toast.LENGTH_LONG).show();
-            }
-            Log.v("arti", allEvents.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        // Make api query through EventFinder.
+        eventFinder.search(artist);
     }
 
     @Override
