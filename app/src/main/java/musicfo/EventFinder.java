@@ -26,6 +26,7 @@ class EventFinder {
   }
 
   public void search(String artist) {
+    allEvents = new HashMap<>();
     Ion.with(activity)
         .load("http://api.songkick.com/api/3.0/events.json?apikey=kWvqvn4PIBVxIuqH&artist_name=" + artist)
         .asString()
