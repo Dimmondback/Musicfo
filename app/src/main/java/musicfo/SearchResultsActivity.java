@@ -1,7 +1,10 @@
 package musicfo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -13,47 +16,79 @@ import java.util.Map;
 
 public class SearchResultsActivity extends AppCompatActivity {
 
-    LinearLayout searchResultsView;
+  LinearLayout searchResultsView;
+  EventFinder eventFinder;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_results);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_search_results);
 
-        searchResultsView = (LinearLayout) findViewById(R.id.search_results);
+    searchResultsView = (LinearLayout) findViewById(R.id.search_results);
 
-
-        if (this.getIntent().getExtras() != null) {
-            if (this.getIntent().getExtras().get("search_results") != null) {
-                HashMap<String, HashSet<String>> results =
-                        (HashMap<String, HashSet<String>>) this.getIntent().getExtras().get("search_results");
-                addResultsToScreen(results);
-            }
-        }
+    // Create EventFinder from previous material if it exists.
+    if (savedInstanceState != null || this.getIntent().getExtras() != null) {
+      if (savedInstanceState != null && savedInstanceState.get("search_results") != null) {
+        eventFinder = new EventFinder(this,
+            (HashMap<String, HashSet<String>>) savedInstanceState.get("search_results"));
+      } else if (getIntent().getExtras().get("search_results") != null) {
+        eventFinder = new EventFinder(this, (HashMap<String, HashSet<String>>) getIntent()
+            .getExtras().get("search_results"));
+      } else {
+        eventFinder = new EventFinder(this, new HashMap<String, HashSet<String>>());
+      }
+    } else {
+      eventFinder = new EventFinder(this, new HashMap<String, HashSet<String>>());
     }
 
-    private void addResultsToScreen(HashMap<String, HashSet<String>> results) {
-        for (Map.Entry<String, HashSet<String>> entry : results.entrySet()) {
-            String artist = entry.getKey();
-            HashSet<String> event = entry.getValue();
+    addResultsToScreen(eventFinder.allEvents);
+  }
 
-            searchResultsView.addView(addEventView(artist, event));
-        }
+  private void addResultsToScreen(HashMap<String, HashSet<String>> results) {
+    for (Map.Entry<String, HashSet<String>> entry : results.entrySet()) {
+      String artist = entry.getKey();
+      HashSet<String> event = entry.getValue();
+
+      searchResultsView.addView(addEventView(artist, event));
+    }
+  }
+
+
+  private View addEventView(String event, HashSet<String> artist) {
+    TextView textView = new TextView(getBaseContext());
+
+    String eventText = event + ":";
+    for (String anArtist : artist) {
+      eventText += "\n" + anArtist;
     }
 
-    private View addEventView(String event, HashSet<String> artist) {
-        TextView textView = new TextView(getBaseContext());
-        String eventText = event + ":\n";
-        System.out.println();
+    textView.setText(eventText);
+    textView.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+    textView.setLayoutParams(new ViewGroup.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+    return textView;
+  }
 
-        for (String anArtist : artist) {
-            eventText += anArtist + "\n";
-        }
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu_main, menu);
+    return true;
+  }
 
-        textView.setText(eventText);
-        textView.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-        textView.setLayoutParams(new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        return textView;
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    int itemId = item.getItemId();
+    switch (itemId) {
+      case R.id.menu_saved_events:
+        Intent savedEvents = new Intent(getApplicationContext(), SavedEventsActivity.class);
+        startActivity(savedEvents);
+        return true;
+      case R.id.menu_settings:
+        Intent settings = new Intent(getApplicationContext(), SettingsActivity.class);
+        startActivity(settings);
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
     }
+  }
 }
