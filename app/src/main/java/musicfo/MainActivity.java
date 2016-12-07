@@ -17,11 +17,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity {
+
+    //Concert first parameter, followed by all artists
+    HashMap<String, HashSet<String>> allEvents = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         //
-        //
         //TODO: either change the app dynamically
         // and display search results or start a
         // new intent with the results
@@ -72,10 +73,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
-    //Concert first parameter, followed by all artists
-    HashMap<String, HashSet<String>> allEvents = new HashMap<>();
-
 
     private void processSearchData(String result) {
 
@@ -96,10 +93,11 @@ public class MainActivity extends AppCompatActivity {
                     String eventName = event.getString("displayName");
 
                     HashSet<String> artists = new HashSet<>();
+
                     for (int j = 0; j < performers.length(); j++) {
 
                         JSONObject anArtist = performers.getJSONObject(j);
-                        Log.v("artist",anArtist.getString("displayName"));
+                        Log.v("artist", anArtist.getString("displayName"));
 
                         artists.add(anArtist.getString("displayName"));
                     }
@@ -107,17 +105,16 @@ public class MainActivity extends AppCompatActivity {
                     //add event to hashmap with artists
                     allEvents.put(eventName, artists);
 
-                    //clear artists for next event
                 }
             } else {
                 Toast.makeText(this, "Can't access songkick", Toast.LENGTH_LONG);
             }
 
             // Print events to insure they are being stored correctly
-//            int i = 0;
-//            for(Object key : allEvents.keySet().toArray()){
-//                Log.v("arti"+(i++), (String) key +": "+java.util.Arrays.toString(allEvents.get(key).toArray()));
-//            }
+            int i = 0;
+            for(Object key : allEvents.keySet().toArray()){
+                Log.v("artists"+(i++), key +": "+java.util.Arrays.toString(allEvents.get(key).toArray()));
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
