@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:paddingTop="4dp"
-    android:paddingBottom="4dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
     tools:context="musicfo.SearchResultsActivity">
 
     <TextView
@@ -14,15 +14,16 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:paddingStart="4dp"
-        android:paddingEnd="4dp"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp"
+        android:paddingTop="6dp"
         android:textSize="18sp"
         android:textColor="@color/white" />
 
     <ImageButton
         android:id="@+id/playButton"
-        android:layout_width="48sp"
-        android:layout_height="48sp"
+        android:layout_width="38sp"
+        android:layout_height="38sp"
         android:background="@color/blue"
         android:scaleType="centerInside"
         android:contentDescription="@string/play_button" />
