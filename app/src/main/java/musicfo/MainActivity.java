@@ -56,6 +56,10 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
+  /**
+   * @param v The SearchView that calls this method.
+   * This method will use EventFinder to search for artists and start the SearchResultActivity.
+   */
   public void search(View v) {
     SearchView s = (SearchView) v;
     String searchValue = s.getQuery().toString();
