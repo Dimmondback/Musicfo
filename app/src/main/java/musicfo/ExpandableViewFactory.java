@@ -50,7 +50,7 @@ public final class ExpandableViewFactory {
     // Create the view from the xml file.
     LayoutInflater inflater = LayoutInflater.from(activity.getBaseContext());
     LinearLayout eventView =
-        (LinearLayout) inflater.inflate(R.layout.expandable_layout, parentView, false);
+        (LinearLayout) inflater.inflate(R.layout.expandable_event_layout, parentView, false);
 
     // Set up the various parts of the expandable view for use.
     TextView eventTitle = (TextView) eventView.findViewById(R.id.event_title);
@@ -66,19 +66,13 @@ public final class ExpandableViewFactory {
 
     final ImageButton toggleable = (ImageButton) eventView.findViewById(R.id.toggleable);
 
-    // Sets the size of the toggle button
-    ViewGroup.LayoutParams arrowParams = toggleable.getLayoutParams();
-    arrowParams.width = 60;
-    arrowParams.height = 60;
-    toggleable.setLayoutParams(arrowParams);
-
     // Set the title's text
     eventTitle.setText(event.replace("(", System.getProperty("line.separator") + "("));
     eventTitle.setTextColor(Color.WHITE);
     eventTitle.setTextSize(18);
 
-    // Add a listener for the toggle
-    eventTitle.setOnClickListener(new View.OnClickListener() {
+    // Add a listener for the toggleable button and title.
+    View.OnClickListener listener = new View.OnClickListener() {
       @Override
       public void onClick(View v) {
         if (expandableArtistList.getVisibility() == View.VISIBLE) {
@@ -91,36 +85,34 @@ public final class ExpandableViewFactory {
           ((View) v.getParent()).invalidate();
         }
       }
-    });
-
+    };
+    eventTitle.setOnClickListener(listener);
+    toggleable.setOnClickListener(listener);
 
     // Add artist names to the expandable section.
-
     for (String artist : artistList) {
 
-      final TextView artistTextView = new TextView(eventView.getContext());
+      LinearLayout artistView = (LinearLayout) inflater.inflate(
+          R.layout.expandable_artist_layout, expandableArtistList, false);
 
+      // TODO(edao): Integrate playback functionality with this button.
+      ImageButton playButton = (ImageButton) artistView.findViewById(R.id.playButton);
+
+      final TextView artistTextView = (TextView) artistView.findViewById(R.id.artist_name);
       artistTextView.setText(artist);
-      artistTextView.setTextSize(18);
-      artistTextView.setTextColor(Color.WHITE);
 
+      // TODO(nsaric): What is this click listener for?
       artistTextView.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
           String a = ((TextView) v).getText().toString();
           getSpotifyJSON(a);
-
           System.out.println("uurrl:" + previewURL);
-
-
-
         }
       });
 
-      expandableArtistList.addView(artistTextView);
+      expandableArtistList.addView(artistView);
     }
-
-
     return eventView;
   }
 

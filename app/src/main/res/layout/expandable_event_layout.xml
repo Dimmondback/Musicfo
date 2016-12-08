@@ -5,17 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="musicfo.SettingsActivity">
+    tools:context="musicfo.SearchResultsActivity">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:minHeight="48sp">
+
         <ImageButton
             android:id="@+id/save_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:contentDescription="@string/save_button" />
+
         <TextView
             android:id="@+id/event_title"
             android:layout_width="0dp"
@@ -23,14 +26,16 @@
             android:layout_weight="1"
             android:paddingStart="4dp"
             android:paddingEnd="4dp" />
+
         <ImageButton
             android:id="@+id/toggleable"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="48sp"
+            android:layout_height="48sp"
             android:background="@drawable/downarrow"
             android:scaleType="centerInside"
             android:contentDescription="@string/toggleable" />
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/expandable_artist_list"
         android:layout_width="match_parent"

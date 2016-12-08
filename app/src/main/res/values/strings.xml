@@ -13,4 +13,5 @@
     <string name="slogan">Concerts on the go</string>
     <string name="toggleable">This button toggles the expandable layout.</string>
     <string name="save_button">This button saves an event to a local database.</string>
+    <string name="play_button">This button plays a 30 sec demo of the artist\'s top track.</string>
 </resources>
