@@ -51,6 +51,12 @@ public class SearchResultsActivity extends AppCompatActivity {
 
         @Override
         public boolean onQueryTextSubmit(String query) {
+          if (expandableViewFactory.mediaPlayer != null && expandableViewFactory.mediaPlayer.isPlaying()) {
+            expandableViewFactory.mediaPlayer.pause();
+            expandableViewFactory.mediaPlayer.stop();
+            expandableViewFactory.mediaPlayer.release();
+            expandableViewFactory.mediaPlayer = null;
+          }
 
           search(findViewById(R.id.search_bar_top));
           sv.clearFocus();
@@ -82,7 +88,7 @@ public class SearchResultsActivity extends AppCompatActivity {
 
   /**
    * @param v The SearchView that calls this method.
-   * This method will use EventFinder to search for artists and start a new SearchResultActivity.
+   *          This method will use EventFinder to search for artists and start a new SearchResultActivity.
    */
   public void search(View v) {
     SearchView s = (SearchView) v;
@@ -136,5 +142,16 @@ public class SearchResultsActivity extends AppCompatActivity {
     // See https://g.co/AppIndexing/AndroidStudio for more information.
     AppIndex.AppIndexApi.end(client, expandableViewFactory.getIndexApiAction());
     client.disconnect();
+  }
+
+  @Override
+  public void onBackPressed() {
+    if (expandableViewFactory.mediaPlayer != null && expandableViewFactory.mediaPlayer.isPlaying()) {
+      expandableViewFactory.mediaPlayer.pause();
+      expandableViewFactory.mediaPlayer.stop();
+      expandableViewFactory.mediaPlayer.release();
+      expandableViewFactory.mediaPlayer = null;
+    }
+    super.onBackPressed();
   }
 }

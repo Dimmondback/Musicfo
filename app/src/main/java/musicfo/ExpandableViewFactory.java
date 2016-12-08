@@ -31,9 +31,11 @@ import android.media.MediaPlayer;
  */
 public final class ExpandableViewFactory {
 
+  public MediaPlayer mediaPlayer;
   private AppCompatActivity activity;
   private ViewGroup parentView;
   private String previewURL = "";
+  private ImageButton previousButton = null;
   private boolean isURLLoading = true;
 
   /**
@@ -102,24 +104,39 @@ public final class ExpandableViewFactory {
       LinearLayout artistView = (LinearLayout) inflater.inflate(
           R.layout.expandable_artist_layout, expandableArtistList, false);
 
-      // TODO(edao): Integrate playback functionality with this button.
-      ImageButton playButton = (ImageButton) artistView.findViewById(R.id.playButton);
-
       final TextView artistTextView = (TextView) artistView.findViewById(R.id.artist_name);
       artistTextView.setText(artist);
 
-      // TODO(nsaric): What is this click listener for?
-
-      final MediaPlayer mediaPlayer = new MediaPlayer();
-
+      // TODO(nsaric): Clean up code by moving mediaplayer stuff to different file + put together.
+      ImageButton playButton = (ImageButton) artistView.findViewById(R.id.playButton);
       playButton.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
           String a = ((TextView)((LinearLayout)v.getParent()).findViewById(R.id.artist_name)).getText().toString();
           getSpotifyJSON(a);
 
-          if(!mediaPlayer.isPlaying()) {
+          // Stop the media player regardless of what button is pressed if it's playing.
+          if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
             mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+          }
+
+          // Create a fresh mediaplayer to use.
+          mediaPlayer = new MediaPlayer();
+
+          // If we select a new button, begin the next song.
+          if(v != previousButton) {
+
+            // Set the buttons' backgrounds accordingly.
+            v.setBackgroundResource(R.drawable.stopbutton);
+            if (previousButton != null) {
+              previousButton.setBackgroundResource(R.drawable.playbutton);
+            }
+
+            // Set the previous button pressed to this button and then start the song.
+            previousButton = (ImageButton) v;
             new Thread(new Runnable() {
               public void run() {
                 try {
@@ -136,8 +153,9 @@ public final class ExpandableViewFactory {
 
               }
             }).start();
-          }else{
-            mediaPlayer.stop();
+          } else {
+            v.setBackgroundResource(R.drawable.playbutton);
+            previousButton = null;
           }
         }
       });
@@ -176,6 +194,7 @@ public final class ExpandableViewFactory {
    * This method will retrieve the preview URL gathered from the Spotify API.
    */
   public void getPreviewURL(String json) {
+    Log.v("spot", "TEST11111");
 
     try {
       JSONObject spotify_ret1 = new JSONObject(json);
@@ -183,6 +202,7 @@ public final class ExpandableViewFactory {
       JSONArray items = artists.getJSONArray("items");
       JSONObject mostPopularArtist = items.getJSONObject(0);
       String artistID = mostPopularArtist.getString("id");
+      Log.v("spot", "TEST1"+ artistID);
 
       Ion.with(activity)
           .load("https://api.spotify.com/v1/artists/" + artistID + "/top-tracks?country=US")
@@ -197,6 +217,7 @@ public final class ExpandableViewFactory {
           });
     } catch (JSONException e) {
       e.printStackTrace();
+      Log.v("spot1","json failed id");
     }
   }
 
@@ -205,6 +226,7 @@ public final class ExpandableViewFactory {
    * This method will retrieve the parsed preview URL from the Spotify API.
    */
   public void parsePreviewURL(String json) {
+    Log.v("spot", "TEST2222");
 
     try {
       JSONObject spotify_ret2 = new JSONObject(json);
@@ -212,8 +234,10 @@ public final class ExpandableViewFactory {
       JSONObject randomTrack = tracks.getJSONObject(1);
 
       previewURL = randomTrack.getString("preview_url");
+      Log.v("spot", "TEST2"+previewURL);
 
     } catch (JSONException e) {
+      Log.v("spot2","json failed url");
       System.err.println(e.toString());
     }
   }
