@@ -1,6 +1,5 @@
 package musicfo;
 
-import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -24,6 +23,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+/**
+ * This class is designed to create ExpandableViews that are used in the SearchResultsActivity.
+ * There are two components, the event's layout and the artist's layout. The event's layout holds
+ * many artists' layouts and these can be viewed when the event's layout is expanded.
+ */
 public final class ExpandableViewFactory {
 
   private AppCompatActivity activity;
@@ -31,11 +35,19 @@ public final class ExpandableViewFactory {
   private String previewURL = "";
   private boolean isURLLoading = true;
 
+  /**
+   * @param activity The activity that will use ExpandableViewFactory.
+   * @param parentView The view that the activity will be adding to.
+   */
   public ExpandableViewFactory(AppCompatActivity activity, ViewGroup parentView) {
     this.activity = activity;
     this.parentView = parentView;
   }
 
+  /**
+   * @param events A list of events and artists contained in a HashMap.
+   * This method does not return a view, instead, acts directly upon parentView.
+   */
   public void createExpandableView(HashMap<String, HashSet<String>> events) {
     parentView.removeAllViews();
     for (Map.Entry<String, HashSet<String>> entry : events.entrySet()) {
@@ -46,6 +58,11 @@ public final class ExpandableViewFactory {
     }
   }
 
+  /**
+   * @param event The name of the event.
+   * @param  artistList The list of artists played at 'event'.
+   * @return Returns an expandable_artist_layout with appropriate name and Spotify link.
+   */
   private View addArtistView(String event, HashSet<String> artistList) {
     // Create the view from the xml file.
     LayoutInflater inflater = LayoutInflater.from(activity.getBaseContext());
@@ -104,7 +121,10 @@ public final class ExpandableViewFactory {
     return eventView;
   }
 
-  // Given an Artist's Name, return a url to a 30s preview of their top track.
+  /**
+   * @param artist An artist's name.
+   * This method will return a url to a 30s preview of the top track of 'artist'.
+   */
   public void getSpotifyJSON(String artist) {
 
     // Searches Spotify's API for the artist
@@ -121,6 +141,10 @@ public final class ExpandableViewFactory {
         });
   }
 
+  /**
+   * @param json JSON result from Spotify API.
+   * This method will retrieve the preview URL gathered from the Spotify API.
+   */
   public void getPreviewURL(String json) {
     try {
       JSONObject spotify_ret1 = new JSONObject(json);
@@ -146,6 +170,10 @@ public final class ExpandableViewFactory {
     }
   }
 
+  /**
+   * @param json A JSON string to be parsed from the Spotify API.
+   * This method will retrieve the parsed preview URL from the Spotify API.
+   */
   public void parsePreviewURL(String json) {
     try {
       JSONObject spotify_ret2 = new JSONObject(json);

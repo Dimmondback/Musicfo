@@ -12,8 +12,31 @@
     android:paddingTop="@dimen/top_margin"
     tools:context="musicfo.SettingsActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:minHeight="16sp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="32dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/radius"/>
+
+        <EditText
+            android:id="@+id/radius_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:hint="@string/radius_hint"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false" />
+    </LinearLayout>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Settings Activity!"/>
+        android:text="@string/feedback" />
 </LinearLayout>

@@ -15,6 +15,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import java.util.HashMap;
 import java.util.HashSet;
 
+/**
+ * This activity is where we display the search results of a search. We use an ExpandableView
+ * in order to save space while still allowing the user to view all of the events and artists they
+ * would be interested in.
+ */
 public class SearchResultsActivity extends AppCompatActivity {
 
   ExpandableViewFactory expandableViewFactory;
@@ -75,6 +80,10 @@ public class SearchResultsActivity extends AppCompatActivity {
     client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
   }
 
+  /**
+   * @param v The SearchView that calls this method.
+   * This method will use EventFinder to search for artists and start a new SearchResultActivity.
+   */
   public void search(View v) {
     SearchView s = (SearchView) v;
     String searchValue = s.getQuery().toString();

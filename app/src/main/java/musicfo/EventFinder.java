@@ -14,16 +14,32 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.HashSet;
 
+/**
+ * This class is designed to save code space and keep searching functions together.
+ */
 class EventFinder {
 
   public HashMap<String, HashSet<String>> allEvents;
   private AppCompatActivity activity;
 
+  /**
+   * @param activity The activity that will use the EventFinder.
+   * @param allEvents The list of events that the EventFinder will use.
+   * The primary use of the EventFinder is to provide a tool that will search for events and
+   * artists using the Songkick API. Searching will always lead to a SearchResultsActivity screen.
+   */
   public EventFinder(AppCompatActivity activity, HashMap<String, HashSet<String>> allEvents) {
     this.activity = activity;
     this.allEvents = allEvents;
   }
 
+  /**
+   *
+   * @param artist The name of the artist to search for.
+   * @param closeActivity Flags whether or not to finish the activity that called search.
+   * This method will gather data using the Songkick API and then start a SearchResultActivity (and
+   * will close the calling activity if appropriate).
+   */
   public void search(String artist, final boolean closeActivity) {
     allEvents = new HashMap<>();
     Ion.with(activity)
@@ -47,6 +63,10 @@ class EventFinder {
         });
   }
 
+  /**
+   * @param result A result string gathered from the Songkick API to be parsed into a JSON object.
+   * This is a behind-the-scenes function that helps process the result string into a JSON object.
+   */
   private void processSearchData(String result) {
     try {
       JSONObject json = new JSONObject(result);
@@ -66,7 +86,7 @@ class EventFinder {
 
           for (int j = 0; j < performers.length(); j++) {
             JSONObject anArtist = performers.getJSONObject(j);
-//            Log.v("artist", anArtist.getString("displayName"));
+           // Log.v("artist", anArtist.getString("displayName"));
 
             artists.add(anArtist.getString("displayName"));
           }
@@ -75,9 +95,9 @@ class EventFinder {
           allEvents.put(eventName, artists);
         }
       } else {
-        Toast.makeText(activity, "Can't access songkick", Toast.LENGTH_LONG).show();
+        Toast.makeText(activity, "Can't access Songkick", Toast.LENGTH_LONG).show();
       }
-//      Log.v("arti", allEvents.toString());
+     // Log.v("arti", allEvents.toString());
     } catch (JSONException e) {
       e.printStackTrace();
     }

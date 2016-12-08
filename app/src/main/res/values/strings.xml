@@ -1,8 +1,15 @@
 <resources>
-    <string name="app_name"></string>
+    <!-- Standard strings used in the app. -->
+    <string name="search">Search for an Artist</string>
+    <string name="radius">Set radius to search within: </string>
+    <string name="radius_hint">Infinite</string>
+
+    <!-- Menu items. -->
     <string name="settings">Settings</string>
     <string name="saved_events">Saved Events</string>
-    <string name="search">Search for an Artist</string>
+
+    <!-- App title and logo. -->
+    <string name="app_name">Concertify</string>
     <string name="Co">Co</string>
     <string name="nc">nc</string>
     <string name="er">er</string>
@@ -11,7 +18,12 @@
     <string name="f" />
     <string name="o" />
     <string name="slogan">Concerts on the go</string>
+
+    <!-- Button descriptions. -->
     <string name="toggleable">This button toggles the expandable layout.</string>
     <string name="save_button">This button saves an event to a local database.</string>
     <string name="play_button">This button plays a 30 sec demo of the artist\'s top track.</string>
+
+    <!-- Feedback and FAQ -->
+    <string name="feedback">Hello! Thank you for using our app. We\'re currently still adding new features and making improvements as time goes on so if you\'ve been enjoying the app so far then stay tuned for more updates and goodies. If you have any feedback to give us please send an email to edmunddao@gmail.com or to nicksaric@gmail.com.</string>
 </resources>
