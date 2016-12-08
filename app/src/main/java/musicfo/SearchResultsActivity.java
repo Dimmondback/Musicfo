@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -33,6 +35,25 @@ public class SearchResultsActivity extends AppCompatActivity {
     searchResultsView = (LinearLayout) findViewById(R.id.search_results);
     expandableViewFactory = new ExpandableViewFactory(this, searchResultsView);
 
+    // Create the SearchView with "enter to search" enabled.
+    final SearchView sv = (SearchView) findViewById(R.id.search_bar_top);
+    if (sv != null) {
+      sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextChange(String newText) {
+          return false;
+        }
+
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+
+          search(findViewById(R.id.search_bar_top));
+          sv.clearFocus();
+          return true;
+        }
+      });
+    }
+
     // Create EventFinder from previous material if it exists.
     if (savedInstanceState != null || this.getIntent().getExtras() != null) {
       if (savedInstanceState != null && savedInstanceState.get("search_results") != null) {
@@ -52,6 +73,17 @@ public class SearchResultsActivity extends AppCompatActivity {
     // ATTENTION: This was auto-generated to implement the App Indexing API.
     // See https://g.co/AppIndexing/AndroidStudio for more information.
     client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+  }
+
+  public void search(View v) {
+    SearchView s = (SearchView) v;
+    String searchValue = s.getQuery().toString();
+
+    // Parse artist name into correct format.
+    String artist = searchValue.replaceAll(" ", "+");
+
+    // Make api query through EventFinder.
+    eventFinder.search(artist, true);
   }
 
   @Override

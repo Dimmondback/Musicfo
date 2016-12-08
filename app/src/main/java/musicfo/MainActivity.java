@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // Create the SearchView with "enter to search" enabled.
     final SearchView sv = (SearchView) findViewById(R.id.search_bar);
     if (sv != null) {
       sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     String artist = searchValue.replaceAll(" ", "+");
 
     // Make api query through EventFinder.
-    eventFinder.search(artist);
+    eventFinder.search(artist, false);
   }
 
   @Override
