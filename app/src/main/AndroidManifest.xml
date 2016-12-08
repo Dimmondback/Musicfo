@@ -16,10 +16,15 @@
         </activity>
         <activity android:name=".SavedEventsActivity" />
         <activity android:name=".SettingsActivity" />
-        <activity android:name=".SearchResultsActivity" /><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+        <activity android:name=".SearchResultsActivity" android:permission="android.permission.INTERNET"/>
+        <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
     </application>
+
+    <permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 </manifest>

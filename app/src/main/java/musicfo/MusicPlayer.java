@@ -1,4 +1,4 @@
-/*
+
 package musicfo;
 
 import android.app.Activity;
@@ -12,7 +12,6 @@ import android.view.View;
 public class MusicPlayer extends Activity {
   static final String AUDIO_PATH = "http://yourHost/play.mp3";
   private MediaPlayer mediaPlayer;
-  private int playbackPosition = 0;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -20,25 +19,8 @@ public class MusicPlayer extends Activity {
     setContentView(R.layout.activity_search_results);
   }
 
-  public void doClick(View view) {
-    switch (view.getId()) {
-      case R.id.startPlayerBtn:
-        try {
-          playAudio(AUDIO_PATH);
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-        break;
-      case R.id.stopPlayerBtn:
-        if (mediaPlayer != null) {
-          mediaPlayer.stop();
-          playbackPosition = 0;
-        }
-        break;
-    }
-  }
 
-  private void playAudio(String url) throws Exception {
+  public void playAudio(String url) throws Exception {
     killMediaPlayer();
 
     mediaPlayer = new MediaPlayer();
@@ -63,4 +45,4 @@ public class MusicPlayer extends Activity {
     }
   }
 }
-*/
+

@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import android.media.MediaPlayer;
 
 public final class ExpandableViewFactory {
 
@@ -102,12 +103,32 @@ public final class ExpandableViewFactory {
       artistTextView.setText(artist);
 
       // TODO(nsaric): What is this click listener for?
-      artistTextView.setOnClickListener(new View.OnClickListener() {
+
+      playButton.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-          String a = ((TextView) v).getText().toString();
+          String a = ((TextView)((LinearLayout)v.getParent()).findViewById(R.id.artist_name)).getText().toString();
+          Log.v("spot", a);
           getSpotifyJSON(a);
-          System.out.println("uurrl:" + previewURL);
+
+          new Thread(new Runnable() {
+            public void run() {
+              try {
+                Thread.sleep(1000);
+                MediaPlayer mediaPlayer = new MediaPlayer();
+                System.out.println("url:" + previewURL);
+
+                mediaPlayer.setDataSource(previewURL);
+                mediaPlayer.prepare();
+                mediaPlayer.start();
+
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
+
+            }
+          }).start();
+
         }
       });
 
@@ -118,28 +139,35 @@ public final class ExpandableViewFactory {
 
   // Given an Artist's Name, return a url to a 30s preview of their top track.
   public void getSpotifyJSON(String artist) {
-
     // Searches Spotify's API for the artist
+    String url = "https://api.spotify.com/v1/search?q=" + artist.replaceAll(" ", "%20") + "&type=artist";
+    Log.v("spot","first:"+url);
+
     Ion.with(activity)
-        .load("https://api.spotify.com/v1/search?q=" + artist.replaceAll(" ", "%20") + "&type=artist")
+        .load(url)
         .asString()
         .setCallback(new FutureCallback<String>() {
           @Override
           public void onCompleted(Exception e, String result) {
+            Log.v("spot1","result"+result+":"+e);
             if (result != null) {
               getPreviewURL(result);
             }
           }
-        });
+        })
+    ;
   }
 
   public void getPreviewURL(String json) {
+    Log.v("spot", "TEST11111");
+
     try {
       JSONObject spotify_ret1 = new JSONObject(json);
       JSONObject artists = spotify_ret1.getJSONObject("artists");
       JSONArray items = artists.getJSONArray("items");
       JSONObject mostPopularArtist = items.getJSONObject(0);
       String artistID = mostPopularArtist.getString("id");
+      Log.v("spot", "TEST1"+ artistID);
 
       Ion.with(activity)
           .load("https://api.spotify.com/v1/artists/" + artistID + "/top-tracks?country=US")
@@ -154,20 +182,23 @@ public final class ExpandableViewFactory {
           });
     } catch (JSONException e) {
       e.printStackTrace();
-      Log.v("vvv", json);
+      Log.v("spot1","json failed id");
     }
   }
 
   public void parsePreviewURL(String json) {
+    Log.v("spot", "TEST2222");
+
     try {
       JSONObject spotify_ret2 = new JSONObject(json);
       JSONArray tracks = spotify_ret2.getJSONArray("tracks");
       JSONObject randomTrack = tracks.getJSONObject(1);
 
       previewURL = randomTrack.getString("preview_url");
-      System.out.println(previewURL);
-      isURLLoading = false;
+      Log.v("spot", "TEST2"+previewURL);
+
     } catch (JSONException e) {
+      Log.v("spot2","json failed url");
       System.err.println(e.toString());
     }
   }
