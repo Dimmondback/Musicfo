@@ -24,7 +24,7 @@ class EventFinder {
     this.allEvents = allEvents;
   }
 
-  public void search(String artist) {
+  public void search(String artist, final boolean closeActivity) {
     allEvents = new HashMap<>();
     Ion.with(activity)
         .load("http://api.songkick.com/api/3.0/events.json?apikey=kWvqvn4PIBVxIuqH&artist_name=" + artist)
@@ -39,6 +39,9 @@ class EventFinder {
               Intent searchResults = new Intent(activity.getApplicationContext(), SearchResultsActivity.class);
               searchResults.putExtra("search_results", allEvents);
               activity.startActivity(searchResults);
+              if (closeActivity) {
+                activity.finish();
+              }
             }
           }
         });

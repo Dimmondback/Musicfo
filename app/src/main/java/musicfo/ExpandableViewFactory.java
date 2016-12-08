@@ -166,8 +166,8 @@ public final class ExpandableViewFactory {
    */
   public Action getIndexApiAction() {
     Thing object = new Thing.Builder()
-        .setName("SearchResults Page") // TODO: Define a title for the content shown.
-        // TODO: Make sure this auto-generated URL is correct.
+        .setName("SearchResults Page") // TODO(edao): Define a title for the content shown.
+        // TODO(edao): Make sure this auto-generated URL is correct.
         .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
         .build();
 
