@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -118,10 +117,5 @@ public class SearchResultsActivity extends AppCompatActivity {
       default:
         return super.onOptionsItemSelected(item);
     }
-  }
-
-  public void toggleViewExpansion(final View view) {
-    LinearLayout layout = (LinearLayout) view.getParent();
-
   }
 }

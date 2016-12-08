@@ -22,20 +22,22 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     final SearchView sv = (SearchView) findViewById(R.id.search_bar);
-    sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-      @Override
-      public boolean onQueryTextChange(String newText) {
-        return false;
-      }
+    if (sv != null) {
+      sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextChange(String newText) {
+          return false;
+        }
 
-      @Override
-      public boolean onQueryTextSubmit(String query) {
+        @Override
+        public boolean onQueryTextSubmit(String query) {
 
-        search(findViewById(R.id.search_bar));
-        sv.clearFocus();
-        return true;
-      }
-    });
+          search(findViewById(R.id.search_bar));
+          sv.clearFocus();
+          return true;
+        }
+      });
+    }
 
     // Create EventFinder from previous material if it exists.
     if (savedInstanceState != null || this.getIntent().getExtras() != null) {
