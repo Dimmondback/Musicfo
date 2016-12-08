@@ -2,7 +2,6 @@ package musicfo;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.koushikdutta.async.future.FutureCallback;
@@ -64,7 +63,7 @@ class EventFinder {
 
           for (int j = 0; j < performers.length(); j++) {
             JSONObject anArtist = performers.getJSONObject(j);
-            Log.v("artist", anArtist.getString("displayName"));
+//            Log.v("artist", anArtist.getString("displayName"));
 
             artists.add(anArtist.getString("displayName"));
           }
@@ -75,7 +74,7 @@ class EventFinder {
       } else {
         Toast.makeText(activity, "Can't access songkick", Toast.LENGTH_LONG).show();
       }
-      Log.v("arti", allEvents.toString());
+//      Log.v("arti", allEvents.toString());
     } catch (JSONException e) {
       e.printStackTrace();
     }

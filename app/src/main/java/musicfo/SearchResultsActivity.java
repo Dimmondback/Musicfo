@@ -3,22 +3,27 @@ package musicfo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 
 public class SearchResultsActivity extends AppCompatActivity {
 
+  ExpandableViewFactory expandableViewFactory;
   LinearLayout searchResultsView;
   EventFinder eventFinder;
+
+  /**
+   * ATTENTION: This was auto-generated to implement the App Indexing API.
+   * See https://g.co/AppIndexing/AndroidStudio for more information.
+   */
+  private GoogleApiClient client;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +31,7 @@ public class SearchResultsActivity extends AppCompatActivity {
     setContentView(R.layout.activity_search_results);
 
     searchResultsView = (LinearLayout) findViewById(R.id.search_results);
+    expandableViewFactory = new ExpandableViewFactory(this, searchResultsView);
 
     // Create EventFinder from previous material if it exists.
     if (savedInstanceState != null || this.getIntent().getExtras() != null) {
@@ -42,58 +48,10 @@ public class SearchResultsActivity extends AppCompatActivity {
       eventFinder = new EventFinder(this, new HashMap<String, HashSet<String>>());
     }
 
-    addResultsToScreen(eventFinder.allEvents);
-  }
-
-  private void addResultsToScreen(HashMap<String, HashSet<String>> results) {
-    for (Map.Entry<String, HashSet<String>> entry : results.entrySet()) {
-      String artist = entry.getKey();
-      HashSet<String> event = entry.getValue();
-
-      searchResultsView.addView(addEventView(artist, event));
-    }
-  }
-
-  private View addEventView(String event, HashSet<String> artistList) {
-    // Create the view from the xml file.
-    LayoutInflater inflater = LayoutInflater.from(getBaseContext());
-    LinearLayout eventView =
-        (LinearLayout) inflater.inflate(R.layout.expandable_layout, searchResultsView, false);
-
-    // Set up the various parts of the expandable view for use.
-    TextView eventTitle = (TextView) eventView.findViewById(R.id.event_title);
-    final LinearLayout expandableArtistList =
-        (LinearLayout) eventView.findViewById(R.id.expandable_artist_list);
-    final ImageButton toggleable = (ImageButton) eventView.findViewById(R.id.toggleable);
-
-    // Set the title's text
-    eventTitle.setText(event);
-    eventTitle.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-
-    // Add a listener for the toggle
-    toggleable.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        if (expandableArtistList.getVisibility() == View.VISIBLE) {
-          toggleable.setBackgroundResource(R.drawable.downarrow);
-          expandableArtistList.setVisibility(View.GONE);
-          ((View) v.getParent()).invalidate();
-        } else {
-          toggleable.setBackgroundResource(R.drawable.uparrow);
-          expandableArtistList.setVisibility(View.VISIBLE);
-          ((View) v.getParent()).invalidate();
-        }
-      }
-    });
-
-    // Add artist names to the expandable section.
-    for (String artist : artistList) {
-      TextView artistTextView = new TextView(eventView.getContext());
-      artistTextView.setText(artist);
-      expandableArtistList.addView(artistTextView);
-    }
-
-    return eventView;
+    expandableViewFactory.createExpandableView(eventFinder.allEvents);
+    // ATTENTION: This was auto-generated to implement the App Indexing API.
+    // See https://g.co/AppIndexing/AndroidStudio for more information.
+    client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
   }
 
   @Override
@@ -117,5 +75,25 @@ public class SearchResultsActivity extends AppCompatActivity {
       default:
         return super.onOptionsItemSelected(item);
     }
+  }
+
+  @Override
+  public void onStart() {
+    super.onStart();
+
+    // ATTENTION: This was auto-generated to implement the App Indexing API.
+    // See https://g.co/AppIndexing/AndroidStudio for more information.
+    client.connect();
+    AppIndex.AppIndexApi.start(client, expandableViewFactory.getIndexApiAction());
+  }
+
+  @Override
+  public void onStop() {
+    super.onStop();
+
+    // ATTENTION: This was auto-generated to implement the App Indexing API.
+    // See https://g.co/AppIndexing/AndroidStudio for more information.
+    AppIndex.AppIndexApi.end(client, expandableViewFactory.getIndexApiAction());
+    client.disconnect();
   }
 }
