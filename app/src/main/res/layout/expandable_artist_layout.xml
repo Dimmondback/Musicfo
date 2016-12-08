@@ -5,14 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-<<<<<<< HEAD
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
-=======
     android:layout_marginStart="20dp"
     android:paddingTop="4dp"
     android:paddingBottom="4dp"
->>>>>>> 5cabef8356f6b076551cea34bc25326a16aaa181
     tools:context="musicfo.SearchResultsActivity">
 
     <TextView
@@ -28,15 +23,9 @@
 
     <ImageButton
         android:id="@+id/playButton"
-<<<<<<< HEAD
-        android:layout_width="38sp"
-        android:layout_height="38sp"
-        android:background="@color/blue"
-=======
         android:layout_width="48sp"
         android:layout_height="48sp"
         android:background="@drawable/playbutton"
->>>>>>> 5cabef8356f6b076551cea34bc25326a16aaa181
         android:scaleType="centerInside"
         android:contentDescription="@string/play_button" />
 </LinearLayout>
