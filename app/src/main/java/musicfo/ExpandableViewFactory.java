@@ -110,32 +110,35 @@ public final class ExpandableViewFactory {
 
       // TODO(nsaric): What is this click listener for?
 
-      playButton.setOnClickListener(new View.OnClickListener() {
+      final MediaPlayer mediaPlayer = new MediaPlayer();
 
+      playButton.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
           String a = ((TextView)((LinearLayout)v.getParent()).findViewById(R.id.artist_name)).getText().toString();
-          Log.v("spot", a);
           getSpotifyJSON(a);
 
-          new Thread(new Runnable() {
-            public void run() {
-              try {
-                Thread.sleep(1000);
-                MediaPlayer mediaPlayer = new MediaPlayer();
-                System.out.println("url:" + previewURL);
+          if(!mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+            new Thread(new Runnable() {
+              public void run() {
+                try {
+                  Thread.sleep(1000);
+                  System.out.println("url:" + previewURL);
 
-                mediaPlayer.setDataSource(previewURL);
-                mediaPlayer.prepare();
-                mediaPlayer.start();
+                  mediaPlayer.setDataSource(previewURL);
+                  mediaPlayer.prepare();
+                  mediaPlayer.start();
 
-              } catch (Exception e) {
-                e.printStackTrace();
+                } catch (Exception e) {
+                  e.printStackTrace();
+                }
+
               }
-
-            }
-          }).start();
-
+            }).start();
+          }else{
+            mediaPlayer.stop();
+          }
         }
       });
 
@@ -173,7 +176,6 @@ public final class ExpandableViewFactory {
    * This method will retrieve the preview URL gathered from the Spotify API.
    */
   public void getPreviewURL(String json) {
-    Log.v("spot", "TEST11111");
 
     try {
       JSONObject spotify_ret1 = new JSONObject(json);
@@ -181,7 +183,6 @@ public final class ExpandableViewFactory {
       JSONArray items = artists.getJSONArray("items");
       JSONObject mostPopularArtist = items.getJSONObject(0);
       String artistID = mostPopularArtist.getString("id");
-      Log.v("spot", "TEST1"+ artistID);
 
       Ion.with(activity)
           .load("https://api.spotify.com/v1/artists/" + artistID + "/top-tracks?country=US")
@@ -196,7 +197,6 @@ public final class ExpandableViewFactory {
           });
     } catch (JSONException e) {
       e.printStackTrace();
-      Log.v("spot1","json failed id");
     }
   }
 
@@ -205,7 +205,6 @@ public final class ExpandableViewFactory {
    * This method will retrieve the parsed preview URL from the Spotify API.
    */
   public void parsePreviewURL(String json) {
-    Log.v("spot", "TEST2222");
 
     try {
       JSONObject spotify_ret2 = new JSONObject(json);
@@ -213,10 +212,8 @@ public final class ExpandableViewFactory {
       JSONObject randomTrack = tracks.getJSONObject(1);
 
       previewURL = randomTrack.getString("preview_url");
-      Log.v("spot", "TEST2"+previewURL);
 
     } catch (JSONException e) {
-      Log.v("spot2","json failed url");
       System.err.println(e.toString());
     }
   }
