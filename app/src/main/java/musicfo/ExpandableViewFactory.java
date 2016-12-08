@@ -31,9 +31,11 @@ import android.media.MediaPlayer;
  */
 public final class ExpandableViewFactory {
 
+  private MediaPlayer mediaPlayer;
   private AppCompatActivity activity;
   private ViewGroup parentView;
   private String previewURL = "";
+  private ImageButton previousButton = null;
   private boolean isURLLoading = true;
 
   /**
@@ -102,40 +104,59 @@ public final class ExpandableViewFactory {
       LinearLayout artistView = (LinearLayout) inflater.inflate(
           R.layout.expandable_artist_layout, expandableArtistList, false);
 
-      // TODO(edao): Integrate playback functionality with this button.
-      ImageButton playButton = (ImageButton) artistView.findViewById(R.id.playButton);
-
       final TextView artistTextView = (TextView) artistView.findViewById(R.id.artist_name);
       artistTextView.setText(artist);
 
-      // TODO(nsaric): What is this click listener for?
-
+      // TODO(nsaric): Clean up code by moving mediaplayer stuff to different file + put together.
+      ImageButton playButton = (ImageButton) artistView.findViewById(R.id.playButton);
       playButton.setOnClickListener(new View.OnClickListener() {
-
         @Override
         public void onClick(View v) {
           String a = ((TextView)((LinearLayout)v.getParent()).findViewById(R.id.artist_name)).getText().toString();
-          Log.v("spot", a);
           getSpotifyJSON(a);
 
-          new Thread(new Runnable() {
-            public void run() {
-              try {
-                Thread.sleep(1000);
-                MediaPlayer mediaPlayer = new MediaPlayer();
-                System.out.println("url:" + previewURL);
+          // Stop the media player regardless of what button is pressed if it's playing.
+          if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+          }
 
-                mediaPlayer.setDataSource(previewURL);
-                mediaPlayer.prepare();
-                mediaPlayer.start();
+          // Create a fresh mediaplayer to use.
+          mediaPlayer = new MediaPlayer();
 
-              } catch (Exception e) {
-                e.printStackTrace();
-              }
+          // If we select a new button, begin the next song.
+          if(v != previousButton) {
 
+            // Set the buttons' backgrounds accordingly.
+            v.setBackgroundResource(R.drawable.stopbutton);
+            if (previousButton != null) {
+              previousButton.setBackgroundResource(R.drawable.playbutton);
             }
-          }).start();
 
+            // Set the previous button pressed to this button and then start the song.
+            previousButton = (ImageButton) v;
+            new Thread(new Runnable() {
+              public void run() {
+                try {
+                  Thread.sleep(1000);
+                  System.out.println("url:" + previewURL);
+
+                  mediaPlayer.setDataSource(previewURL);
+                  mediaPlayer.prepare();
+                  mediaPlayer.start();
+
+                } catch (Exception e) {
+                  e.printStackTrace();
+                }
+
+              }
+            }).start();
+          } else {
+            v.setBackgroundResource(R.drawable.playbutton);
+            previousButton = null;
+          }
         }
       });
 
