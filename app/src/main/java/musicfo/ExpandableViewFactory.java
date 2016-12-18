@@ -1,13 +1,10 @@
 package musicfo;
 
-import android.app.Activity;
-import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -135,13 +132,14 @@ public final class ExpandableViewFactory  {
    * This method will handle setting the listener for the save button.
    */
   public void SaveButtonCreation(final View artistView) {
-    // Add a listener for the save button.
+    // Add a listener for the save button.q
     final ImageButton saveButton = (ImageButton) artistView.findViewById(R.id.save_button);
+
     // TODO(edao): Implement the listener.
     saveButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        // Remove this below once you're ready.
+        // Change this below once you're ready.
         LinearLayout parent = (LinearLayout) saveButton.getParent();
         String temp = ((TextView) parent.findViewById(R.id.artist_name)).getText().toString();
 
