@@ -1,11 +1,14 @@
 package musicfo;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 
@@ -24,7 +27,8 @@ public class SavedEventsActivity extends AppCompatActivity {
 
   ExpandableViewFactory expandableViewFactory;
   LinearLayout searchResultsView;
-  EventFinder eventFinder;
+  private SQLiteDatabase db = null;
+
 
   /**
    * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -37,69 +41,38 @@ public class SavedEventsActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_search_results);
 
+    db = openOrCreateDatabase("events", MODE_PRIVATE, null);
+
+
     searchResultsView = (LinearLayout) findViewById(R.id.search_results);
     expandableViewFactory = new ExpandableViewFactory(this, searchResultsView);
 
-    // Create the SearchView with "enter to search" enabled.
-    final SearchView sv = (SearchView) findViewById(R.id.search_bar_top);
-    if (sv != null) {
-      sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-        @Override
-        public boolean onQueryTextChange(String newText) {
-          return false;
-        }
+    HashMap<String, HashSet<String>> saved_content = new HashMap<>();
+    HashSet artists = new HashSet<String>();
 
-        @Override
-        public boolean onQueryTextSubmit(String query) {
-          if (expandableViewFactory.mediaPlayer != null && expandableViewFactory.mediaPlayer.isPlaying()) {
-            expandableViewFactory.mediaPlayer.pause();
-            expandableViewFactory.mediaPlayer.stop();
-            expandableViewFactory.mediaPlayer.release();
-            expandableViewFactory.mediaPlayer = null;
-          }
+    db.execSQL("create table if not exists saved(url text)");
+    Cursor cursor = db.rawQuery("select * from saved", null);
 
-          search(findViewById(R.id.search_bar_top));
-          sv.clearFocus();
-          return true;
-        }
-      });
+    cursor.moveToNext();
+    while (!cursor.isAfterLast()) {
+
+      artists.add( cursor.getString(0) );
+
+      cursor.moveToNext();
+
     }
 
-    // Create EventFinder from previous material if it exists.
-    if (savedInstanceState != null || this.getIntent().getExtras() != null) {
-      if (savedInstanceState != null && savedInstanceState.get("search_results") != null) {
-        eventFinder = new EventFinder(this,
-            (HashMap<String, HashSet<String>>) savedInstanceState.get("search_results"));
-      } else if (getIntent().getExtras().get("search_results") != null) {
-        eventFinder = new EventFinder(this, (HashMap<String, HashSet<String>>) getIntent()
-            .getExtras().get("search_results"));
-      } else {
-        eventFinder = new EventFinder(this, new HashMap<String, HashSet<String>>());
-      }
-    } else {
-      eventFinder = new EventFinder(this, new HashMap<String, HashSet<String>>());
-    }
+    cursor.close();
 
-    expandableViewFactory.createExpandableView(eventFinder.allEvents);
+    saved_content.put("Saved Artists",artists);
+
+    expandableViewFactory.createExpandableView(saved_content);
     // ATTENTION: This was auto-generated to implement the App Indexing API.
     // See https://g.co/AppIndexing/AndroidStudio for more information.
     client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
   }
 
-  /**
-   * @param v The SearchView that calls this method.
-   *          This method will use EventFinder to search for artists and start a new SearchResultActivity.
-   */
-  public void search(View v) {
-    SearchView s = (SearchView) v;
-    String searchValue = s.getQuery().toString();
 
-    // Parse artist name into correct format.
-    String artist = searchValue.replaceAll(" ", "+");
-
-    // Make api query through EventFinder.
-    eventFinder.search(artist, true);
-  }
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
@@ -112,8 +85,6 @@ public class SavedEventsActivity extends AppCompatActivity {
     int itemId = item.getItemId();
     switch (itemId) {
       case R.id.menu_saved_events:
-        Intent savedEvents = new Intent(getApplicationContext(), SavedEventsActivity.class);
-        startActivity(savedEvents);
         return true;
       case R.id.menu_settings:
         Intent settings = new Intent(getApplicationContext(), SettingsActivity.class);

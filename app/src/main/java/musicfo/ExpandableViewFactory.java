@@ -1,8 +1,13 @@
 package musicfo;
 
+import android.app.Activity;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,15 +27,15 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import android.media.MediaPlayer;
-import android.widget.Toast;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * This class is designed to create ExpandableViews that are used in the SearchResultsActivity.
  * There are two components, the event's layout and the artist's layout. The event's layout holds
  * many artists' layouts and these can be viewed when the event's layout is expanded.
  */
-public final class ExpandableViewFactory {
+public final class ExpandableViewFactory  {
 
   public MediaPlayer mediaPlayer;
   private int playtime;
@@ -40,6 +45,8 @@ public final class ExpandableViewFactory {
   private ImageButton previousButton = null;
   private boolean isURLReady = false;
 
+   SQLiteDatabase db = null;
+
   /**
    * @param activity The activity that will use ExpandableViewFactory.
    * @param parentView The view that the activity will be adding to.
@@ -47,6 +54,8 @@ public final class ExpandableViewFactory {
   public ExpandableViewFactory(AppCompatActivity activity, ViewGroup parentView) {
     this.activity = activity;
     this.parentView = parentView;
+    db = activity.openOrCreateDatabase("events", MODE_PRIVATE, null);
+
   }
 
   /**
@@ -113,7 +122,6 @@ public final class ExpandableViewFactory {
       // Prepare the save button.
       SaveButtonCreation(artistView);
 
-
       // Media Player handling.
       MediaPlayerHandling(artistView);
 
@@ -136,7 +144,11 @@ public final class ExpandableViewFactory {
         // Remove this below once you're ready.
         LinearLayout parent = (LinearLayout) saveButton.getParent();
         String temp = ((TextView) parent.findViewById(R.id.artist_name)).getText().toString();
-        System.out.println("Click: " + temp);
+
+        db.execSQL("create table if not exists saved(artist text)");
+        db.execSQL("insert into saved(artist) values(\"" + temp + "\")");
+        v.setVisibility(View.GONE);
+
       }
     });
   }
