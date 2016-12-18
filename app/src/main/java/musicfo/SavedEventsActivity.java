@@ -29,6 +29,7 @@ public class SavedEventsActivity extends AppCompatActivity {
   LinearLayout searchResultsView;
   private SQLiteDatabase db = null;
 
+  EventFinder eventFinder;
 
   /**
    * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -39,6 +40,9 @@ public class SavedEventsActivity extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    eventFinder = new EventFinder(this, new HashMap<String, HashSet<String>>());
+
     setContentView(R.layout.activity_search_results);
 
     db = openOrCreateDatabase("events", MODE_PRIVATE, null);
@@ -70,9 +74,41 @@ public class SavedEventsActivity extends AppCompatActivity {
     // ATTENTION: This was auto-generated to implement the App Indexing API.
     // See https://g.co/AppIndexing/AndroidStudio for more information.
     client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    final SearchView sv = (SearchView) findViewById(R.id.search_bar_top);
+    if (sv != null) {
+      sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextChange(String newText) {
+          return false;
+        }
+
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+          if (expandableViewFactory.mediaPlayer != null && expandableViewFactory.mediaPlayer.isPlaying()) {
+            expandableViewFactory.mediaPlayer.pause();
+            expandableViewFactory.mediaPlayer.stop();
+            expandableViewFactory.mediaPlayer.release();
+            expandableViewFactory.mediaPlayer = null;
+          }
+
+          search(findViewById(R.id.search_bar_top));
+          sv.clearFocus();
+          return true;
+        }
+      });
+    }
   }
 
+  public void search(View v) {
+    SearchView s = (SearchView) v;
+    String searchValue = s.getQuery().toString();
 
+    // Parse artist name into correct format.
+    String artist = searchValue.replaceAll(" ", "+");
+
+    // Make api query through EventFinder.
+    eventFinder.search(artist, true);
+  }
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
