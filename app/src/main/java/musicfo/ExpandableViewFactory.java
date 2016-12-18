@@ -105,65 +105,97 @@ public final class ExpandableViewFactory {
       LinearLayout artistView = (LinearLayout) inflater.inflate(
           R.layout.expandable_artist_layout, expandableArtistList, false);
 
+      // Set the title accordingly.
       final TextView artistTextView = (TextView) artistView.findViewById(R.id.artist_name);
       artistTextView.setText(artist);
 
-      // TODO(nsaric): Clean up code by moving mediaplayer stuff to different file + put together.
-      ImageButton playButton = (ImageButton) artistView.findViewById(R.id.playButton);
-      playButton.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          String a = ((TextView)((LinearLayout)v.getParent()).findViewById(R.id.artist_name)).getText().toString();
-          getSpotifyJSON(a);
+      // Prepare the save button.
+      SaveButtonCreation(artistView);
 
-          // Stop the media player regardless of what button is pressed if it's playing.
-          if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-            mediaPlayer.pause();
-            mediaPlayer.stop();
-            mediaPlayer.release();
-            mediaPlayer = null;
-          }
-
-          // Create a fresh mediaplayer to use.
-          mediaPlayer = new MediaPlayer();
-
-          // If we select a new button, begin the next song.
-          if(v != previousButton) {
-
-            // Set the buttons' backgrounds accordingly.
-            v.setBackgroundResource(R.drawable.stopbutton);
-            if (previousButton != null) {
-              previousButton.setBackgroundResource(R.drawable.playbutton);
-            }
-
-            // Set the previous button pressed to this button and then start the song.
-            previousButton = (ImageButton) v;
-            new Thread(new Runnable() {
-              public void run() {
-                try {
-                  Thread.sleep(1000);
-                  System.out.println("url:" + previewURL);
-
-                  mediaPlayer.setDataSource(previewURL);
-                  mediaPlayer.prepare();
-                  mediaPlayer.start();
-
-                } catch (Exception e) {
-                  e.printStackTrace();
-                }
-
-              }
-            }).start();
-          } else {
-            v.setBackgroundResource(R.drawable.playbutton);
-            previousButton = null;
-          }
-        }
-      });
+      // Media Player handling.
+      MediaPlayerHandling(artistView);
 
       expandableArtistList.addView(artistView);
     }
     return eventView;
+  }
+
+  /**
+   * @param artistView The view where the save button is located.
+   * This method will handle setting the listener for the save button.
+   */
+  public void SaveButtonCreation(final View artistView) {
+    // Add a listener for the save button.
+    final ImageButton saveButton = (ImageButton) artistView.findViewById(R.id.save_button);
+    // TODO(edao): Implement the listener.
+    saveButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        // Remove this below once you're ready.
+        LinearLayout parent = (LinearLayout) saveButton.getParent();
+        String temp = ((TextView) parent.findViewById(R.id.artist_name)).getText().toString();
+        System.out.println("Click: " + temp);
+      }
+    });
+  }
+
+  /**
+   * @param artistView The view where the save button is located.
+   * This method will handle Media Player related logic.
+   */
+  public void MediaPlayerHandling(View artistView) {
+    // TODO(nsaric): Clean up code by moving mediaplayer stuff to different file + put together.
+    ImageButton playButton = (ImageButton) artistView.findViewById(R.id.playButton);
+    playButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        String a = ((TextView)((LinearLayout)v.getParent()).findViewById(R.id.artist_name)).getText().toString();
+        getSpotifyJSON(a);
+
+        // Stop the media player regardless of what button is pressed if it's playing.
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+          mediaPlayer.pause();
+          mediaPlayer.stop();
+          mediaPlayer.release();
+          mediaPlayer = null;
+        }
+
+        // Create a fresh mediaplayer to use.
+        mediaPlayer = new MediaPlayer();
+
+        // If we select a new button, begin the next song.
+        if(v != previousButton) {
+
+          // Set the buttons' backgrounds accordingly.
+          v.setBackgroundResource(R.drawable.stopbutton);
+          if (previousButton != null) {
+            previousButton.setBackgroundResource(R.drawable.playbutton);
+          }
+
+          // Set the previous button pressed to this button and then start the song.
+          previousButton = (ImageButton) v;
+          new Thread(new Runnable() {
+            public void run() {
+              try {
+                Thread.sleep(1000);
+                System.out.println("url:" + previewURL);
+
+                mediaPlayer.setDataSource(previewURL);
+                mediaPlayer.prepare();
+                mediaPlayer.start();
+
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
+
+            }
+          }).start();
+        } else {
+          v.setBackgroundResource(R.drawable.playbutton);
+          previousButton = null;
+        }
+      }
+    });
   }
 
   /**

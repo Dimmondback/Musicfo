@@ -10,9 +10,6 @@ import android.widget.LinearLayout;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import java.util.HashMap;
-import java.util.HashSet;
-
 public class SavedEventsActivity extends AppCompatActivity {
 
   ExpandableViewFactory expandableViewFactory;

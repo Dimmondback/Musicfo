@@ -2,12 +2,8 @@
 package musicfo;
 
 import android.app.Activity;
-import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
-import android.view.View;
 
 public class MusicPlayer extends Activity {
   static final String AUDIO_PATH = "http://yourHost/play.mp3";

@@ -13,12 +13,6 @@
         android:orientation="horizontal"
         android:minHeight="48sp">
 
-        <ImageButton
-            android:id="@+id/save_button"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/save_button" />
-
         <TextView
             android:id="@+id/event_title"
             android:layout_width="0dp"
