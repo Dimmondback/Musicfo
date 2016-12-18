@@ -79,7 +79,7 @@ public final class ExpandableViewFactory {
         (LinearLayout) eventView.findViewById(R.id.expandable_artist_list);
     final ImageButton toggleable = (ImageButton) eventView.findViewById(R.id.toggleable);
 
-    // Set the title's text
+    // Set the title's text with a new line
     eventTitle.setText(event.replace("(", System.getProperty("line.separator") + "("));
 
     // Add a listener for the toggleable button and title.
@@ -186,8 +186,7 @@ public final class ExpandableViewFactory {
               getPreviewURL(result);
             }
           }
-        })
-    ;
+        });
   }
 
   /**
@@ -203,7 +202,6 @@ public final class ExpandableViewFactory {
       JSONArray items = artists.getJSONArray("items");
       JSONObject mostPopularArtist = items.getJSONObject(0);
       String artistID = mostPopularArtist.getString("id");
-      Log.v("spot", "TEST1"+ artistID);
 
       Ion.with(activity)
           .load("https://api.spotify.com/v1/artists/" + artistID + "/top-tracks?country=US")
