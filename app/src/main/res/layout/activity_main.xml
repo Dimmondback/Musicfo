@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:paddingTop="80dp">
+        android:paddingTop="40dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -98,12 +98,13 @@
         android:id="@+id/search_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_below="@id/slogan"
         android:background="@color/white"
         android:iconifiedByDefault="false"
         android:imeOptions="normal"
         android:inputType="text"
         android:onClick="search"
-        android:queryHint="@string/search" />
+        android:queryHint="@string/search"
+        android:layout_marginTop="40dp"/>
 
 </RelativeLayout>

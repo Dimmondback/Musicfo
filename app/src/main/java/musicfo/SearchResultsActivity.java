@@ -125,6 +125,19 @@ public class SearchResultsActivity extends AppCompatActivity {
   }
 
   @Override
+  public void onResume() {
+    super.onResume();
+    expandableViewFactory.resumeMediaPlayer();
+  }
+
+  @Override
+  public void onPause() {
+    expandableViewFactory.stopMediaPlayer();
+    super.onStop();
+  }
+
+
+  @Override
   public void onStart() {
     super.onStart();
 

@@ -31,8 +31,8 @@ public class MusicPlayer extends Activity {
 
   @Override
   protected void onDestroy() {
-    super.onDestroy();
     killMediaPlayer();
+    super.onDestroy();
   }
 
   private void killMediaPlayer() {

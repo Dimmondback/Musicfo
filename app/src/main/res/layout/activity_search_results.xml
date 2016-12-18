@@ -27,7 +27,8 @@
         android:queryHint="@string/search"
         android:windowSoftInputMode="stateHidden"
         android:background="@color/colorPrimary"
-        android:theme="@style/SearchResultsSearchbar" />
+        android:theme="@style/SearchResultsSearchbar"
+        android:layout_marginBottom="8dp" />
 
     <ScrollView
         android:layout_width="match_parent"

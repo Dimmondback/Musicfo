@@ -32,6 +32,7 @@ import android.media.MediaPlayer;
 public final class ExpandableViewFactory {
 
   public MediaPlayer mediaPlayer;
+  private int playtime;
   private AppCompatActivity activity;
   private ViewGroup parentView;
   private String previewURL = "";
@@ -257,5 +258,19 @@ public final class ExpandableViewFactory {
         .setObject(object)
         .setActionStatus(Action.STATUS_TYPE_COMPLETED)
         .build();
+  }
+
+  public void stopMediaPlayer() {
+    if (mediaPlayer != null) {
+      playtime = mediaPlayer.getCurrentPosition();
+      mediaPlayer.pause();
+    }
+  }
+
+  public void resumeMediaPlayer() {
+    if (mediaPlayer != null) {
+      mediaPlayer.seekTo(playtime);
+      mediaPlayer.start();
+    }
   }
 }
