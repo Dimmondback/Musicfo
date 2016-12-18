@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import android.media.MediaPlayer;
+import android.widget.Toast;
 
 /**
  * This class is designed to create ExpandableViews that are used in the SearchResultsActivity.
@@ -33,11 +34,11 @@ public final class ExpandableViewFactory {
 
   public MediaPlayer mediaPlayer;
   private int playtime;
-  private AppCompatActivity activity;
+  private final AppCompatActivity activity;
   private ViewGroup parentView;
   private String previewURL = "";
   private ImageButton previousButton = null;
-  private boolean isURLLoading = true;
+  private boolean isURLReady = false;
 
   /**
    * @param activity The activity that will use ExpandableViewFactory.
@@ -115,6 +116,7 @@ public final class ExpandableViewFactory {
         public void onClick(View v) {
           String a = ((TextView)((LinearLayout)v.getParent()).findViewById(R.id.artist_name)).getText().toString();
           getSpotifyJSON(a);
+          isURLReady = false;
 
           // Stop the media player regardless of what button is pressed if it's playing.
           if (mediaPlayer != null && mediaPlayer.isPlaying()) {
@@ -142,12 +144,12 @@ public final class ExpandableViewFactory {
               public void run() {
                 try {
                   Thread.sleep(1000);
-                  System.out.println("url:" + previewURL);
 
-                  mediaPlayer.setDataSource(previewURL);
-                  mediaPlayer.prepare();
-                  mediaPlayer.start();
-
+                  if(isURLReady) {
+                    mediaPlayer.setDataSource(previewURL);
+                    mediaPlayer.prepare();
+                    mediaPlayer.start();
+                  }
                 } catch (Exception e) {
                   e.printStackTrace();
                 }
@@ -225,15 +227,13 @@ public final class ExpandableViewFactory {
    * This method will retrieve the parsed preview URL from the Spotify API.
    */
   public void parsePreviewURL(String json) {
-    Log.v("spot", "TEST2222");
 
     try {
       JSONObject spotify_ret2 = new JSONObject(json);
       JSONArray tracks = spotify_ret2.getJSONArray("tracks");
       JSONObject randomTrack = tracks.getJSONObject(1);
-
+      isURLReady = true;
       previewURL = randomTrack.getString("preview_url");
-      Log.v("spot", "TEST2"+previewURL);
 
     } catch (JSONException e) {
       Log.v("spot2","json failed url");
