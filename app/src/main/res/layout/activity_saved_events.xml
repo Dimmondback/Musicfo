@@ -8,8 +8,7 @@
     android:paddingBottom="@dimen/top_margin"
     android:paddingLeft="@dimen/bottom_margin"
     android:paddingRight="@dimen/bottom_margin"
-    android:paddingTop="@dimen/top_margin"
-    tools:context="musicfo.SavedEventsActivity">
+    android:paddingTop="@dimen/top_margin">
 
     <TextView
         android:layout_width="wrap_content"

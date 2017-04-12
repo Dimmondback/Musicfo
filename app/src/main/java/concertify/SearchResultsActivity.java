@@ -1,14 +1,11 @@
-package musicfo;
+package concertify;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 
@@ -18,17 +15,17 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import musicfo.R;
+
 /**
  * This activity is where we display the search results of a search. We use an ExpandableView
  * in order to save space while still allowing the user to view all of the events and artists they
  * would be interested in.
  */
-public class SavedEventsActivity extends AppCompatActivity {
+public class SearchResultsActivity extends AppCompatActivity {
 
   ExpandableViewFactory expandableViewFactory;
   LinearLayout searchResultsView;
-  private SQLiteDatabase db = null;
-
   EventFinder eventFinder;
 
   /**
@@ -40,40 +37,12 @@ public class SavedEventsActivity extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
-    eventFinder = new EventFinder(this, new HashMap<String, HashSet<String>>());
-
     setContentView(R.layout.activity_search_results);
-
-    db = openOrCreateDatabase("events", MODE_PRIVATE, null);
-
 
     searchResultsView = (LinearLayout) findViewById(R.id.search_results);
     expandableViewFactory = new ExpandableViewFactory(this, searchResultsView);
 
-    HashMap<String, HashSet<String>> saved_content = new HashMap<>();
-    HashSet artists = new HashSet<String>();
-
-    db.execSQL("create table if not exists saved(url text)");
-    Cursor cursor = db.rawQuery("select * from saved", null);
-
-    cursor.moveToNext();
-    while (!cursor.isAfterLast()) {
-
-      artists.add( cursor.getString(0) );
-
-      cursor.moveToNext();
-
-    }
-
-    cursor.close();
-
-    saved_content.put("Saved Artists",artists);
-
-    expandableViewFactory.createExpandableView(saved_content);
-    // ATTENTION: This was auto-generated to implement the App Indexing API.
-    // See https://g.co/AppIndexing/AndroidStudio for more information.
-    client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    // Create the SearchView with "enter to search" enabled.
     final SearchView sv = (SearchView) findViewById(R.id.search_bar_top);
     if (sv != null) {
       sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -97,8 +66,32 @@ public class SavedEventsActivity extends AppCompatActivity {
         }
       });
     }
+
+    // Create EventFinder from previous material if it exists.
+    if (savedInstanceState != null || this.getIntent().getExtras() != null) {
+      if (savedInstanceState != null && savedInstanceState.get("search_results") != null) {
+        eventFinder = new EventFinder(this,
+            (HashMap<String, HashSet<String>>) savedInstanceState.get("search_results"));
+      } else if (getIntent().getExtras().get("search_results") != null) {
+        eventFinder = new EventFinder(this, (HashMap<String, HashSet<String>>) getIntent()
+            .getExtras().get("search_results"));
+      } else {
+        eventFinder = new EventFinder(this, new HashMap<String, HashSet<String>>());
+      }
+    } else {
+      eventFinder = new EventFinder(this, new HashMap<String, HashSet<String>>());
+    }
+
+    expandableViewFactory.createExpandableView(eventFinder.allEvents);
+    // ATTENTION: This was auto-generated to implement the App Indexing API.
+    // See https://g.co/AppIndexing/AndroidStudio for more information.
+    client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
   }
 
+  /**
+   * @param v The SearchView that calls this method.
+   *          This method will use EventFinder to search for artists and start a new SearchResultActivity.
+   */
   public void search(View v) {
     SearchView s = (SearchView) v;
     String searchValue = s.getQuery().toString();
@@ -121,6 +114,8 @@ public class SavedEventsActivity extends AppCompatActivity {
     int itemId = item.getItemId();
     switch (itemId) {
       case R.id.menu_saved_events:
+        Intent savedEvents = new Intent(getApplicationContext(), SavedEventsActivity.class);
+        startActivity(savedEvents);
         return true;
       case R.id.menu_settings:
         Intent settings = new Intent(getApplicationContext(), SettingsActivity.class);

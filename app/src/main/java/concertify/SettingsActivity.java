@@ -1,7 +1,9 @@
-package musicfo;
+package concertify;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
+import musicfo.R;
 
 public class SettingsActivity extends AppCompatActivity {
 

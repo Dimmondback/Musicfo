@@ -8,7 +8,7 @@
     android:layout_marginStart="20dp"
     android:paddingTop="4dp"
     android:paddingBottom="4dp"
-    tools:context="musicfo.SearchResultsActivity">
+    tools:context="concertify.SearchResultsActivity">
 
     <ImageButton
         android:id="@+id/save_button"

@@ -1,4 +1,4 @@
-package musicfo;
+package concertify;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import android.widget.SearchView;
 
 import java.util.HashMap;
 import java.util.HashSet;
+
+import musicfo.R;
 
 public class MainActivity extends AppCompatActivity {
 

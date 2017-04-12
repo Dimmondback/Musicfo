@@ -14,9 +14,9 @@
     <string name="nc">nc</string>
     <string name="er">er</string>
     <string name="ti">ti</string>
-    <string name="fy">fy</string>
-    <string name="f" />
-    <string name="o" />
+    <string name="fy"> fy</string>
+    <string name="f"/>
+    <string name="o"/>
     <string name="slogan">Concerts on the go</string>
 
     <!-- Button descriptions. -->
@@ -26,4 +26,10 @@
 
     <!-- Feedback and FAQ -->
     <string name="feedback">Hello! Thank you for using our app. We\'re currently still adding new features and making improvements as time goes on so if you\'ve been enjoying the app so far then stay tuned for more updates and goodies. If you have any feedback to give us please send an email to edmunddao@gmail.com or to nicksaric@gmail.com.</string>
+    <string name="title_activity_test">test</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>

@@ -1,4 +1,4 @@
-package musicfo;
+package concertify;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

@@ -10,7 +10,7 @@
     android:paddingLeft="@dimen/bottom_margin"
     android:paddingRight="@dimen/bottom_margin"
     android:paddingTop="@dimen/top_margin"
-    tools:context="musicfo.SettingsActivity">
+    tools:context="musicfo.concertify.SettingsActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

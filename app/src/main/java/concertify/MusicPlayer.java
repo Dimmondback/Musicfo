@@ -1,9 +1,11 @@
 
-package musicfo;
+package concertify;
 
 import android.app.Activity;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+
+import musicfo.R;
 
 public class MusicPlayer extends Activity {
   static final String AUDIO_PATH = "http://yourHost/play.mp3";

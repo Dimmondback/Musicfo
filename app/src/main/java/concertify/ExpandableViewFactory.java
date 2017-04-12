@@ -1,4 +1,4 @@
-package musicfo;
+package concertify;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import musicfo.R;
+
 import static android.content.Context.MODE_PRIVATE;
 
 /**
@@ -32,20 +34,17 @@ import static android.content.Context.MODE_PRIVATE;
  * There are two components, the event's layout and the artist's layout. The event's layout holds
  * many artists' layouts and these can be viewed when the event's layout is expanded.
  */
-public final class ExpandableViewFactory  {
+public final class ExpandableViewFactory {
 
-  public MediaPlayer mediaPlayer;
-  private int playtime;
   private final AppCompatActivity activity;
+  public MediaPlayer mediaPlayer;
+  SQLiteDatabase db = null;
+  private int playtime;
   private ViewGroup parentView;
-  private String previewURL = "";
   private ImageButton previousButton = null;
-  private boolean isURLReady = false;
-
-   SQLiteDatabase db = null;
 
   /**
-   * @param activity The activity that will use ExpandableViewFactory.
+   * @param activity   The activity that will use ExpandableViewFactory.
    * @param parentView The view that the activity will be adding to.
    */
   public ExpandableViewFactory(AppCompatActivity activity, ViewGroup parentView) {
@@ -57,7 +56,7 @@ public final class ExpandableViewFactory  {
 
   /**
    * @param events A list of events and artists contained in a HashMap.
-   * This method does not return a view, instead, acts directly upon parentView.
+   *               This method does not return a view, instead, acts directly upon parentView.
    */
   public void createExpandableView(HashMap<String, HashSet<String>> events) {
     parentView.removeAllViews();
@@ -70,8 +69,8 @@ public final class ExpandableViewFactory  {
   }
 
   /**
-   * @param event The name of the event.
-   * @param  artistList The list of artists played at 'event'.
+   * @param event      The name of the event.
+   * @param artistList The list of artists played at 'event'.
    * @return Returns an expandable_artist_layout with appropriate name and Spotify link.
    */
   private View addArtistView(String event, HashSet<String> artistList) {
@@ -129,7 +128,7 @@ public final class ExpandableViewFactory  {
 
   /**
    * @param artistView The view where the save button is located.
-   * This method will handle setting the listener for the save button.
+   *                   This method will handle setting the listener for the save button.
    */
   public void SaveButtonCreation(final View artistView) {
     // Add a listener for the save button.q
@@ -153,7 +152,7 @@ public final class ExpandableViewFactory  {
 
   /**
    * @param artistView The view where the save button is located.
-   * This method will handle Media Player related logic.
+   *                   This method will handle Media Player related logic.
    */
   public void MediaPlayerHandling(View artistView) {
     // TODO(nsaric): Clean up code by moving mediaplayer stuff to different file + put together.
@@ -161,9 +160,8 @@ public final class ExpandableViewFactory  {
     playButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        String a = ((TextView)((LinearLayout)v.getParent()).findViewById(R.id.artist_name)).getText().toString();
-        getSpotifyJSON(a);
-        isURLReady = false;
+        String a = ((TextView) ((LinearLayout) v.getParent()).findViewById(R.id.artist_name)).getText().toString();
+
 
         // Stop the media player regardless of what button is pressed if it's playing.
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
@@ -177,7 +175,9 @@ public final class ExpandableViewFactory  {
         mediaPlayer = new MediaPlayer();
 
         // If we select a new button, begin the next song.
-        if(v != previousButton) {
+        if (v != previousButton) {
+
+          startSpotifyPlayback(a);
 
           // Set the buttons' backgrounds accordingly.
           v.setBackgroundResource(R.drawable.stopbutton);
@@ -187,21 +187,7 @@ public final class ExpandableViewFactory  {
 
           // Set the previous button pressed to this button and then start the song.
           previousButton = (ImageButton) v;
-          new Thread(new Runnable() {
-            public void run() {
-              try {
-                Thread.sleep(1000);
 
-                if(isURLReady) {
-                  mediaPlayer.setDataSource(previewURL);
-                  mediaPlayer.prepare();
-                  mediaPlayer.start();
-                }
-              } catch (Exception e) {
-                e.printStackTrace();
-              }
-            }
-          }).start();
         } else {
           v.setBackgroundResource(R.drawable.playbutton);
           previousButton = null;
@@ -212,76 +198,77 @@ public final class ExpandableViewFactory  {
 
   /**
    * @param artist An artist's name.
-   * This method will return a url to a 30s preview of the top track of 'artist'.
+   *               This method will return a url to a 30s preview of the top track of 'artist'.
    */
-  public void getSpotifyJSON(String artist) {
+  public void startSpotifyPlayback(String artist) {
     // Searches Spotify's API for the artist
     String url = "https://api.spotify.com/v1/search?q=" + artist.replaceAll(" ", "%20") + "&type=artist";
-    Log.v("spot","first:"+url);
+    Log.v("spot", "first:" + url);
 
+    //
+    // This sends a query to spotify to find the artist's id and then start's music playback.
+    //
     Ion.with(activity)
         .load(url)
         .asString()
         .setCallback(new FutureCallback<String>() {
           @Override
           public void onCompleted(Exception e, String result) {
-            Log.v("spot1","result"+result+":"+e);
+            Log.v("spot1", "result" + result + ":" + e);
             if (result != null) {
-              getPreviewURL(result);
+
+              try {
+                JSONObject spotify_ret1 = new JSONObject(result);
+                JSONObject artists = spotify_ret1.getJSONObject("artists");
+                JSONArray items = artists.getJSONArray("items");
+                JSONObject mostPopularArtist = items.getJSONObject(0);
+                String artistID = mostPopularArtist.getString("id");
+
+                playArtistPreview(artistID);
+
+              } catch (JSONException je) {
+                je.printStackTrace();
+              }
+
             }
           }
         });
   }
 
   /**
-   * @param json JSON result from Spotify API.
-   * This method will retrieve the preview URL gathered from the Spotify API.
+   * @param artistID JSON result from Spotify API.
+   *                 This method will retrieve the preview URL gathered from the Spotify API.
    */
-  public void getPreviewURL(String json) {
-    Log.v("spot", "TEST11111");
+  public void playArtistPreview(String artistID) {
 
-    try {
-      JSONObject spotify_ret1 = new JSONObject(json);
-      JSONObject artists = spotify_ret1.getJSONObject("artists");
-      JSONArray items = artists.getJSONArray("items");
-      JSONObject mostPopularArtist = items.getJSONObject(0);
-      String artistID = mostPopularArtist.getString("id");
+    Ion.with(activity)
+        .load("https://api.spotify.com/v1/artists/" + artistID + "/top-tracks?country=US")
+        .asString()
+        .setCallback(new FutureCallback<String>() {
+          @Override
+          public void onCompleted(Exception e, String result) {
+            if (result != null) {
 
-      Ion.with(activity)
-          .load("https://api.spotify.com/v1/artists/" + artistID + "/top-tracks?country=US")
-          .asString()
-          .setCallback(new FutureCallback<String>() {
-            @Override
-            public void onCompleted(Exception e, String result) {
-              if (result != null) {
-                parsePreviewURL(result);
+              try {
+                JSONObject spotify_ret2 = new JSONObject(result);
+                JSONArray tracks = spotify_ret2.getJSONArray("tracks");
+                JSONObject randomTrack = tracks.getJSONObject(1);
+                String previewURL = randomTrack.getString("preview_url");
+
+                mediaPlayer.setDataSource(previewURL);
+                mediaPlayer.prepare();
+                mediaPlayer.start();
+
+              } catch (Exception ee) {
+                ee.printStackTrace();
               }
+
             }
-          });
-    } catch (JSONException e) {
-      e.printStackTrace();
-      Log.v("spot1","json failed id");
-    }
+          }
+        });
+
   }
 
-  /**
-   * @param json A JSON string to be parsed from the Spotify API.
-   * This method will retrieve the parsed preview URL from the Spotify API.
-   */
-  public void parsePreviewURL(String json) {
-
-    try {
-      JSONObject spotify_ret2 = new JSONObject(json);
-      JSONArray tracks = spotify_ret2.getJSONArray("tracks");
-      JSONObject randomTrack = tracks.getJSONObject(1);
-      isURLReady = true;
-      previewURL = randomTrack.getString("preview_url");
-
-    } catch (JSONException e) {
-      Log.v("spot2","json failed url");
-      System.err.println(e.toString());
-    }
-  }
 
   /**
    * ATTENTION: This was auto-generated to implement the App Indexing API.

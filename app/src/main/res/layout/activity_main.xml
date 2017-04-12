@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
-    android:paddingBottom="@dimen/bottom_margin"
-    android:paddingLeft="@dimen/side_padding"
-    android:paddingRight="@dimen/side_padding"
-    android:paddingTop="@dimen/top_margin"
-    tools:context="musicfo.MainActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/activity_main"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/colorPrimaryDark"
+              android:orientation="vertical"
+              android:paddingBottom="@dimen/bottom_margin"
+              android:paddingLeft="@dimen/side_padding"
+              android:paddingRight="@dimen/side_padding"
+              android:paddingTop="@dimen/top_margin"
+              >
 
     <LinearLayout
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
         android:paddingTop="40dp">
 
         <TextView
@@ -23,45 +25,51 @@
             android:layout_height="wrap_content"
             android:fontFamily="cursive"
             android:text="@string/Co"
+            android:textAlignment="center"
             android:textColor="@color/red"
             android:textSize="56sp"
-            android:textStyle="normal|bold" />
+            android:textStyle="normal|bold"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="cursive"
             android:text="@string/nc"
+            android:textAlignment="center"
             android:textColor="@color/orange"
             android:textSize="56sp"
-            android:textStyle="normal|bold" />
+            android:textStyle="normal|bold"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="cursive"
             android:text="@string/er"
+            android:textAlignment="center"
             android:textColor="@color/yellow"
             android:textSize="56sp"
-            android:textStyle="normal|bold" />
+            android:textStyle="normal|bold"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="cursive"
             android:text="@string/ti"
+            android:textAlignment="center"
             android:textColor="@color/green"
             android:textSize="56sp"
-            android:textStyle="normal|bold" />
+            android:textStyle="normal|bold"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="cursive"
             android:text="@string/fy"
+            android:textAlignment="center"
+            android:textAllCaps="false"
             android:textColor="@color/blue"
             android:textSize="56sp"
-            android:textStyle="normal|bold" />
+            android:textStyle="normal|bold"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -70,7 +78,7 @@
             android:text="@string/f"
             android:textColor="@color/magenta"
             android:textSize="56sp"
-            android:textStyle="normal|bold" />
+            android:textStyle="normal|bold"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -79,32 +87,20 @@
             android:text="@string/o"
             android:textColor="@color/purple"
             android:textSize="56sp"
-            android:textStyle="normal|bold" />
+            android:textStyle="normal|bold"/>
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/slogan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/title"
-        android:layout_centerHorizontal="true"
-        android:layout_marginEnd="28dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/slogan"
-        android:textColor="@color/white"
-        android:textStyle="normal|bold" />
 
     <SearchView
         android:id="@+id/search_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/slogan"
+        android:layout_marginTop="40dp"
         android:background="@color/white"
         android:iconifiedByDefault="false"
         android:imeOptions="normal"
         android:inputType="text"
         android:onClick="search"
-        android:queryHint="@string/search"
-        android:layout_marginTop="40dp"/>
 
-</RelativeLayout>
+        android:queryHint="@string/search"/>
+
+</LinearLayout>
